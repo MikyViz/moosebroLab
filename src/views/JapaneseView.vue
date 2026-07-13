@@ -11,6 +11,15 @@ type QuizItem = {
   ch: string
   r: string
   day: DayFilter
+  kind: 'hiragana' | 'radical'
+}
+
+type QuizMistake = {
+  ch: string
+  expected: string
+  answer: string
+  day: DayFilter
+  kind: 'hiragana' | 'radical'
 }
 
 const activeTab = ref<TabKey>('hiragana')
@@ -25,6 +34,7 @@ const quizFilter = ref<DayFilter>('all')
 const quizItems = ref<QuizItem[]>([])
 const quizIndex = ref(0)
 const quizCorrect = ref(0)
+const quizMisses = ref<QuizMistake[]>([])
 const quizInput = ref('')
 const quizFeedback = ref('')
 const quizFeedbackClass = ref('')
@@ -49,6 +59,54 @@ const grammarItems = computed(() => grammarData[grammarDay.value])
 
 const currentQuizItem = computed(() => quizItems.value[quizIndex.value] ?? null)
 const quizDone = computed(() => quizIndex.value >= quizItems.value.length)
+const quizTotalAttempts = computed(() => quizCorrect.value + quizMisses.value.length)
+const quizSuccessRate = computed(() => {
+  if (quizTotalAttempts.value === 0) {
+    return 0
+  }
+  return Math.round((quizCorrect.value / quizTotalAttempts.value) * 100)
+})
+
+const quizMistakeSummary = computed(() => {
+  const grouped = new Map<
+    string,
+    {
+      ch: string
+      expected: string
+      kind: 'hiragana' | 'radical'
+      day: DayFilter
+      count: number
+      answers: Set<string>
+    }
+  >()
+
+  for (const miss of quizMisses.value) {
+    const key = `${miss.kind}-${miss.ch}-${miss.expected}`
+    const existing = grouped.get(key)
+    if (existing) {
+      existing.count += 1
+      existing.answers.add(miss.answer)
+      continue
+    }
+
+    grouped.set(key, {
+      ch: miss.ch,
+      expected: miss.expected,
+      kind: miss.kind,
+      day: miss.day,
+      count: 1,
+      answers: new Set([miss.answer]),
+    })
+  }
+
+  return Array.from(grouped.values())
+    .sort((a, b) => b.count - a.count)
+    .map((item) => ({
+      ...item,
+      answers: Array.from(item.answers),
+    }))
+})
+
 const quizProgress = computed(() => {
   if (quizDone.value) {
     return `Правильно ${quizCorrect.value} из ${quizItems.value.length}`
@@ -93,8 +151,13 @@ const shuffle = <T,>(arr: T[]): T[] => {
 
 const resetQuiz = () => {
   const base: QuizItem[] = [
-    ...hiragana.map((item) => ({ ch: item.ch, r: item.r, day: `day${item.day}` as DayFilter })),
-    ...radicals.map((item) => ({ ch: item.ch, r: item.r.split(' / ')[0].split(' ')[0], day: `day${item.day}` as DayFilter })),
+    ...hiragana.map((item) => ({ ch: item.ch, r: item.r, day: `day${item.day}` as DayFilter, kind: 'hiragana' as const })),
+    ...radicals.map((item) => ({
+      ch: item.ch,
+      r: item.r.split(' / ')[0].split(' ')[0],
+      day: `day${item.day}` as DayFilter,
+      kind: 'radical' as const,
+    })),
   ]
 
   const filtered = quizFilter.value === 'all' ? base : base.filter((item) => item.day === quizFilter.value)
@@ -102,6 +165,7 @@ const resetQuiz = () => {
   quizItems.value = shuffle(filtered)
   quizIndex.value = 0
   quizCorrect.value = 0
+  quizMisses.value = []
   quizInput.value = ''
   quizFeedback.value = ''
   quizFeedbackClass.value = ''
@@ -129,6 +193,13 @@ const checkQuiz = () => {
 
   quizFeedback.value = `✗ Неверно — правильный ответ: ${item.r}`
   quizFeedbackClass.value = 'bad'
+  quizMisses.value.push({
+    ch: item.ch,
+    expected: item.r,
+    answer: answer || '(пусто)',
+    day: item.day,
+    kind: item.kind,
+  })
 }
 
 const skipQuiz = () => {
@@ -261,9 +332,36 @@ resetQuiz()
       </div>
 
       <div class="quiz-footer">
-        <span>Правильно: <span class="quiz-score">{{ quizCorrect }}</span></span>
+        <span>
+          Успехов: <span class="quiz-score">{{ quizCorrect }}</span>
+          • Промахов: <span class="quiz-miss-score">{{ quizMisses.length }}</span>
+          • Успешность: <span class="quiz-score">{{ quizSuccessRate }}%</span>
+        </span>
         <button class="quiz-restart-btn" @click="resetQuiz">Начать заново</button>
       </div>
+
+      <section class="quiz-stats">
+        <h3>Статистика ошибок</h3>
+        <p class="quiz-stats-summary">
+          Всего попыток: {{ quizTotalAttempts }}. Успехов: {{ quizCorrect }}. Промахов: {{ quizMisses.length }}.
+        </p>
+
+        <ul v-if="quizMistakeSummary.length" class="quiz-miss-list">
+          <li v-for="item in quizMistakeSummary" :key="`${item.kind}-${item.ch}-${item.expected}`" class="quiz-miss-item">
+            <div class="quiz-miss-head">
+              <span class="quiz-miss-char">{{ item.ch }}</span>
+              <span class="quiz-miss-meta">{{ item.kind === 'hiragana' ? 'Хирагана' : 'Радикал' }} • {{ item.day }}</span>
+            </div>
+            <div class="quiz-miss-details">
+              Нужно: <strong>{{ item.expected }}</strong>.
+              Введено: {{ item.answers.join(', ') }}.
+              Промахов: {{ item.count }}.
+            </div>
+          </li>
+        </ul>
+
+        <p v-else class="quiz-perfect">Промахов пока нет. Идёшь чисто.</p>
+      </section>
     </section>
   </main>
 </template>
@@ -638,6 +736,12 @@ resetQuiz()
   font-size: 18px;
 }
 
+.quiz-miss-score {
+  font-weight: 700;
+  color: var(--color-danger);
+  font-size: 18px;
+}
+
 .quiz-restart-btn {
   font-size: 14px;
   background: transparent;
@@ -646,6 +750,72 @@ resetQuiz()
   border-radius: var(--border-radius-md);
   color: var(--color-text-secondary);
   cursor: pointer;
+  font-weight: 600;
+}
+
+.quiz-stats {
+  margin-top: 1.25rem;
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--border-radius-md);
+  background: var(--color-background-primary);
+  padding: 1rem;
+}
+
+.quiz-stats h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.quiz-stats-summary {
+  margin: 0.5rem 0 0;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.quiz-miss-list {
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.quiz-miss-item {
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--border-radius-md);
+  padding: 0.65rem 0.75rem;
+  background: var(--color-background-secondary);
+}
+
+.quiz-miss-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.quiz-miss-char {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.quiz-miss-meta {
+  color: var(--color-text-tertiary);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.quiz-miss-details {
+  margin-top: 0.35rem;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.quiz-perfect {
+  margin: 0.75rem 0 0;
+  color: var(--color-success);
   font-weight: 600;
 }
 
