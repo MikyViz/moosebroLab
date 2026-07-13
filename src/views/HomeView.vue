@@ -11,6 +11,10 @@
         <h2>Japanese</h2>
         <p>Хирагана, радикалы, грамматика и квиз</p>
       </RouterLink>
+      <RouterLink to="/chemistry" class="card">
+        <h2>Chemistry</h2>
+        <p>Конспекты и демонстрация: вода и лёд</p>
+      </RouterLink>
       <RouterLink to="/cleanup" class="card">
         <h2>Cleanup</h2>
         <p>Monthly cleanup cheatsheet</p>

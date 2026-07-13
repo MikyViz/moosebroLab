@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import EnglishView from '../views/EnglishView.vue'
 import JapaneseView from '../views/JapaneseView.vue'
 import CleanupView from '../views/CleanupView.vue'
+import ChemistryView from '../views/ChemistryView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -26,6 +27,11 @@ const router = createRouter({
       path: '/cleanup',
       name: 'cleanup',
       component: CleanupView,
+    },
+    {
+      path: '/chemistry',
+      name: 'chemistry',
+      component: ChemistryView,
     },
   ],
 })
