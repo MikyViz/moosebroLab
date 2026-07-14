@@ -6,6 +6,8 @@
         <div class="links">
           <RouterLink to="/english" class="link">English</RouterLink>
           <RouterLink to="/japanese" class="link">Japanese</RouterLink>
+          <RouterLink to="/philosophy" class="link">Philosophy</RouterLink>
+          <RouterLink to="/programming" class="link">Programming</RouterLink>
           <RouterLink to="/chemistry" class="link">Chemistry</RouterLink>
           <RouterLink to="/workouts" class="link">Workouts</RouterLink>
           <RouterLink to="/cleanup" class="link">Cleanup</RouterLink>

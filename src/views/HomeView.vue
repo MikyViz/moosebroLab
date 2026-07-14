@@ -11,6 +11,14 @@
         <h2>Japanese</h2>
         <p>Хирагана, радикалы, грамматика и квиз</p>
       </RouterLink>
+      <RouterLink to="/philosophy" class="card">
+        <h2>Philosophy</h2>
+        <p>Стоицизм, восточные учения и рефлексия</p>
+      </RouterLink>
+      <RouterLink to="/programming" class="card">
+        <h2>Programming</h2>
+        <p>Основа: хеш-таблицы, рекурсия, two pointers</p>
+      </RouterLink>
       <RouterLink to="/chemistry" class="card">
         <h2>Chemistry</h2>
         <p>Конспекты и демонстрация: вода и лёд</p>
