@@ -54,9 +54,6 @@ export const programmingBaseTopics: ProgrammingTopic[] = [
     complexity: 'O(n) при одном проходе',
     takeaway: 'Часто заменяет двойной цикл O(n²).',
   },
-]
-
-export const programmingExtraTopics: ProgrammingTopic[] = [
   {
     id: 10,
     title: 'Race Condition',
@@ -70,6 +67,103 @@ export const programmingExtraTopics: ProgrammingTopic[] = [
     code: `ALTER TABLE cart_items\nADD UNIQUE KEY unique_user_item (user_id, product_id);`,
     takeaway: 'Фронт снижает риск, БД гарантирует целостность.',
   },
+
+  // 🔥 НОВЫЕ ТЕМЫ
+
+  {
+    id: 11,
+    title: 'HTTP-модуль Node.js',
+    icon: '🌐',
+    color: '#2ecc71',
+    points: [
+      { label: 'Суть', text: 'Базовый модуль Node.js для создания серверов без Express.' },
+      { label: 'Потоки', text: 'Запросы и ответы — это streams, приходят кусками.' },
+      { label: 'Гибкость', text: 'Express — это просто удобная обёртка над http.' },
+    ],
+    code: `const http = require('http');\n\nconst server = http.createServer((req, res) => {\n  res.end('Hello');\n});\n\nserver.listen(3000);`,
+    takeaway: 'Понимание http-модуля даёт контроль над сервером на низком уровне.',
+  },
+  {
+    id: 12,
+    title: 'Middleware-цепочка',
+    icon: '🧩',
+    color: '#9b59b6',
+    points: [
+      { label: 'Суть', text: 'Функции, которые выполняются до обработчика маршрута.' },
+      { label: 'next()', text: 'Передаёт управление следующему middleware.' },
+      { label: 'Гибкость', text: 'Можно останавливать запрос, модифицировать req/res.' },
+    ],
+    code: `app.use((req, res, next) => {\n  console.log('Middleware');\n  next();\n});`,
+    takeaway: 'Middleware — фундамент Express и любого фреймворка.',
+  },
+  {
+    id: 13,
+    title: 'JSON Parser',
+    icon: '📦',
+    color: '#1abc9c',
+    points: [
+      { label: 'Проблема', text: 'Тело запроса приходит потоками, а не готовым объектом.' },
+      { label: 'Решение', text: 'Собрать chunks, дождаться конца, распарсить JSON.' },
+      { label: 'Использование', text: 'Добавляет req.body в фреймворк.' },
+    ],
+    code: `req.on('data', chunk => data += chunk);\nreq.on('end', () => req.body = JSON.parse(data));`,
+    takeaway: 'Это то, что делает express.json() под капотом.',
+  },
+  {
+    id: 14,
+    title: 'URL-encoded Parser',
+    icon: '🔤',
+    color: '#e84393',
+    points: [
+      { label: 'Формат', text: 'Строка вида key=value&key2=value2.' },
+      { label: 'Использование', text: 'HTML-формы по умолчанию отправляют URL-encoded.' },
+      { label: 'Парсинг', text: 'split("&"), split("="), decodeURIComponent.' },
+    ],
+    code: `const pairs = data.split('&');\nfor (const p of pairs) {\n  const [k, v] = p.split('=');\n  result[decodeURIComponent(k)] = decodeURIComponent(v);\n}`,
+    takeaway: 'Это аналог express.urlencoded().',
+  },
+  {
+    id: 15,
+    title: 'Функции как объекты',
+    icon: '🧠',
+    color: '#fdcb6e',
+    points: [
+      { label: 'Суть', text: 'В JS функция — это объект, ей можно добавлять свойства.' },
+      { label: 'Фреймворки', text: 'Express — это функция с методами (get, post, listen).' },
+      { label: 'Гибкость', text: 'Позволяет создавать собственные мини-фреймворки.' },
+    ],
+    code: `function app() {}\napp.get = () => {};\napp.listen = () => {};`,
+    takeaway: 'Понимание этого — ключ к созданию своих библиотек.',
+  },
+  {
+    id: 16,
+    title: 'Динамические маршруты',
+    icon: '🛣️',
+    color: '#6c5ce7',
+    points: [
+      { label: 'Суть', text: 'Маршрут содержит переменные части: /users/:id.' },
+      { label: 'Разбор', text: 'Сравнение частей пути, извлечение параметров.' },
+      { label: 'Результат', text: 'req.params = { id: "42" }.' },
+    ],
+    code: `const parts = path.split('/');\nif (routePart.startsWith(':')) params[name] = value;`,
+    takeaway: 'Это то, как Express делает req.params.',
+  },
+  {
+    id: 17,
+    title: 'Регулярки для маршрутов',
+    icon: '📐',
+    color: '#0984e3',
+    points: [
+      { label: 'Суть', text: 'Регулярки позволяют сопоставлять шаблон маршрута с URL.' },
+      { label: 'Параметры', text: '([^/]+) — динамическая часть пути.' },
+      { label: 'Границы', text: '^ начало, $ конец строки.' },
+    ],
+    code: `^/users/([^/]+)$`,
+    takeaway: 'Регулярки — основа динамических маршрутов Express.',
+  },
+]
+
+export const programmingExtraTopics: ProgrammingTopic[] = [
   {
     id: 1,
     title: 'Сквозное шифрование',
