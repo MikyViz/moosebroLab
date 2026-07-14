@@ -221,25 +221,25 @@ resetQuiz()
 </script>
 
 <template>
-  <main class="jp-page">
-    <div class="tabs-container">
-      <button class="tab-btn" :class="{ active: activeTab === 'hiragana' }" @click="activeTab = 'hiragana'">Хирагана</button>
-      <button class="tab-btn" :class="{ active: activeTab === 'radicals' }" @click="activeTab = 'radicals'">Радикалы</button>
-      <button class="tab-btn" :class="{ active: activeTab === 'grammar' }" @click="activeTab = 'grammar'">Грамматика</button>
-      <button class="tab-btn" :class="{ active: activeTab === 'quiz' }" @click="activeTab = 'quiz'">Проверка себя</button>
+  <main class="jp-page study-wrap">
+    <div class="tabs-container study-tabs">
+      <button class="tab-btn study-tab" :class="{ active: activeTab === 'hiragana' }" @click="activeTab = 'hiragana'">Хирагана</button>
+      <button class="tab-btn study-tab" :class="{ active: activeTab === 'radicals' }" @click="activeTab = 'radicals'">Радикалы</button>
+      <button class="tab-btn study-tab" :class="{ active: activeTab === 'grammar' }" @click="activeTab = 'grammar'">Грамматика</button>
+      <button class="tab-btn study-tab" :class="{ active: activeTab === 'quiz' }" @click="activeTab = 'quiz'">Проверка себя</button>
     </div>
 
     <section v-show="activeTab === 'hiragana'" class="panel">
-      <div class="filter-container">
-        <button class="filter-btn" :class="{ active: hiraganaFilter === 'all' }" @click="hiraganaFilter = 'all'">Все вместе</button>
-        <button class="filter-btn" :class="{ active: hiraganaFilter === 'day1' }" @click="hiraganaFilter = 'day1'">День 1 (あ, か)</button>
-        <button class="filter-btn" :class="{ active: hiraganaFilter === 'day2' }" @click="hiraganaFilter = 'day2'">День 2 (さ, た)</button>
-        <button class="filter-btn" :class="{ active: hiraganaFilter === 'day3' }" @click="hiraganaFilter = 'day3'">День 3 (な, は)</button>
-        <button class="filter-btn" :class="{ active: hiraganaFilter === 'day4' }" @click="hiraganaFilter = 'day4'">День 4 (ま, や)</button>
+      <div class="filter-container study-tabs">
+        <button class="filter-btn study-tab" :class="{ active: hiraganaFilter === 'all' }" @click="hiraganaFilter = 'all'">Все вместе</button>
+        <button class="filter-btn study-tab" :class="{ active: hiraganaFilter === 'day1' }" @click="hiraganaFilter = 'day1'">День 1 (あ, か)</button>
+        <button class="filter-btn study-tab" :class="{ active: hiraganaFilter === 'day2' }" @click="hiraganaFilter = 'day2'">День 2 (さ, た)</button>
+        <button class="filter-btn study-tab" :class="{ active: hiraganaFilter === 'day3' }" @click="hiraganaFilter = 'day3'">День 3 (な, は)</button>
+        <button class="filter-btn study-tab" :class="{ active: hiraganaFilter === 'day4' }" @click="hiraganaFilter = 'day4'">День 4 (ま, や)</button>
       </div>
 
       <div class="card-grid">
-        <article v-for="item in filteredHiragana" :key="item.ch" class="card" @click="toggleHiragana(item.ch)">
+        <article v-for="item in filteredHiragana" :key="item.ch" class="card study-card" @click="toggleHiragana(item.ch)">
           <div class="card-char">{{ item.ch }}</div>
           <div class="card-reading">{{ item.r }}</div>
           <div v-if="openHiragana.has(item.ch)" class="card-mnemonic">{{ item.mnemonic }}</div>
@@ -248,16 +248,16 @@ resetQuiz()
     </section>
 
     <section v-show="activeTab === 'radicals'" class="panel">
-      <div class="filter-container">
-        <button class="filter-btn" :class="{ active: radicalsFilter === 'all' }" @click="radicalsFilter = 'all'">Все вместе</button>
-        <button class="filter-btn" :class="{ active: radicalsFilter === 'day1' }" @click="radicalsFilter = 'day1'">День 1 (人–山)</button>
-        <button class="filter-btn" :class="{ active: radicalsFilter === 'day2' }" @click="radicalsFilter = 'day2'">День 2 (火–小)</button>
-        <button class="filter-btn" :class="{ active: radicalsFilter === 'day3' }" @click="radicalsFilter = 'day3'">День 3 (月–女)</button>
-        <button class="filter-btn" :class="{ active: radicalsFilter === 'day4' }" @click="radicalsFilter = 'day4'">День 4 (心–子)</button>
+      <div class="filter-container study-tabs">
+        <button class="filter-btn study-tab" :class="{ active: radicalsFilter === 'all' }" @click="radicalsFilter = 'all'">Все вместе</button>
+        <button class="filter-btn study-tab" :class="{ active: radicalsFilter === 'day1' }" @click="radicalsFilter = 'day1'">День 1 (人–山)</button>
+        <button class="filter-btn study-tab" :class="{ active: radicalsFilter === 'day2' }" @click="radicalsFilter = 'day2'">День 2 (火–小)</button>
+        <button class="filter-btn study-tab" :class="{ active: radicalsFilter === 'day3' }" @click="radicalsFilter = 'day3'">День 3 (月–女)</button>
+        <button class="filter-btn study-tab" :class="{ active: radicalsFilter === 'day4' }" @click="radicalsFilter = 'day4'">День 4 (心–子)</button>
       </div>
 
       <div class="card-grid">
-        <article v-for="item in filteredRadicals" :key="item.ch" class="card" @click="toggleRadical(item.ch)">
+        <article v-for="item in filteredRadicals" :key="item.ch" class="card study-card" @click="toggleRadical(item.ch)">
           <div class="card-char">{{ item.ch }}</div>
           <div class="card-reading">{{ item.r }} — {{ item.meaning }}</div>
           <div v-if="openRadicals.has(item.ch)" class="radical-card-mnemonic">
@@ -268,10 +268,10 @@ resetQuiz()
     </section>
 
     <section v-show="activeTab === 'grammar'" class="panel">
-      <div class="filter-container">
-        <button class="filter-btn" :class="{ active: grammarDay === 'day2' }" @click="grammarDay = 'day2'">День 2</button>
-        <button class="filter-btn" :class="{ active: grammarDay === 'day3' }" @click="grammarDay = 'day3'">День 3</button>
-        <button class="filter-btn" :class="{ active: grammarDay === 'day4' }" @click="grammarDay = 'day4'">День 4</button>
+      <div class="filter-container study-tabs">
+        <button class="filter-btn study-tab" :class="{ active: grammarDay === 'day2' }" @click="grammarDay = 'day2'">День 2</button>
+        <button class="filter-btn study-tab" :class="{ active: grammarDay === 'day3' }" @click="grammarDay = 'day3'">День 3</button>
+        <button class="filter-btn study-tab" :class="{ active: grammarDay === 'day4' }" @click="grammarDay = 'day4'">День 4</button>
       </div>
 
       <div id="grammar-content">
@@ -300,12 +300,12 @@ resetQuiz()
     </section>
 
     <section v-show="activeTab === 'quiz'" class="panel">
-      <div class="filter-container">
-        <button class="filter-btn" :class="{ active: quizFilter === 'all' }" @click="setQuizFilter('all')">Все вместе</button>
-        <button class="filter-btn" :class="{ active: quizFilter === 'day1' }" @click="setQuizFilter('day1')">День 1</button>
-        <button class="filter-btn" :class="{ active: quizFilter === 'day2' }" @click="setQuizFilter('day2')">День 2</button>
-        <button class="filter-btn" :class="{ active: quizFilter === 'day3' }" @click="setQuizFilter('day3')">День 3</button>
-        <button class="filter-btn" :class="{ active: quizFilter === 'day4' }" @click="setQuizFilter('day4')">День 4</button>
+      <div class="filter-container study-tabs">
+        <button class="filter-btn study-tab" :class="{ active: quizFilter === 'all' }" @click="setQuizFilter('all')">Все вместе</button>
+        <button class="filter-btn study-tab" :class="{ active: quizFilter === 'day1' }" @click="setQuizFilter('day1')">День 1</button>
+        <button class="filter-btn study-tab" :class="{ active: quizFilter === 'day2' }" @click="setQuizFilter('day2')">День 2</button>
+        <button class="filter-btn study-tab" :class="{ active: quizFilter === 'day3' }" @click="setQuizFilter('day3')">День 3</button>
+        <button class="filter-btn study-tab" :class="{ active: quizFilter === 'day4' }" @click="setQuizFilter('day4')">День 4</button>
       </div>
 
       <div class="quiz-container">
@@ -376,18 +376,12 @@ resetQuiz()
   line-height: 1.6;
   color: var(--color-text-primary);
   background: var(--color-background-secondary);
-  padding: 2rem 1rem;
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .tabs-container {
-  display: flex;
-  gap: 8px;
   margin-bottom: 2rem;
   border-bottom: 2px solid var(--color-border-primary);
   padding-bottom: 0;
-  flex-wrap: wrap;
   background: var(--color-background-primary);
   border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
   padding: 8px 8px 0;
@@ -398,11 +392,7 @@ resetQuiz()
   border-bottom: 3px solid transparent;
   border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
   background: transparent;
-  padding: 12px 20px;
-  font-size: 14px;
-  font-weight: 500;
   color: var(--color-text-secondary);
-  cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
 }
@@ -453,10 +443,7 @@ resetQuiz()
 }
 
 .filter-container {
-  display: flex;
-  gap: 8px;
   margin-bottom: 1.5rem;
-  flex-wrap: wrap;
   padding: 0.75rem;
   background: var(--color-background-secondary);
   border-radius: var(--border-radius-md);
@@ -464,14 +451,11 @@ resetQuiz()
 }
 
 .filter-btn {
-  padding: 8px 16px;
-  font-size: 13px;
   font-weight: 600;
   border-radius: var(--border-radius-md);
   border: 1px solid var(--color-border-primary);
   background: var(--color-background-primary);
   color: var(--color-text-secondary);
-  cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
 }
@@ -496,10 +480,6 @@ resetQuiz()
 }
 
 .card {
-  background: var(--color-background-primary);
-  border: 1px solid var(--color-border-primary);
-  border-radius: var(--border-radius-lg);
-  padding: 1.5rem 1rem;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
