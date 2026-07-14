@@ -15,6 +15,10 @@
         <h2>Chemistry</h2>
         <p>Конспекты и демонстрация: вода и лёд</p>
       </RouterLink>
+      <RouterLink to="/workouts" class="card">
+        <h2>Workouts</h2>
+        <p>Анатомия по паттернам и недельная программа</p>
+      </RouterLink>
       <RouterLink to="/cleanup" class="card">
         <h2>Cleanup</h2>
         <p>Monthly cleanup cheatsheet</p>

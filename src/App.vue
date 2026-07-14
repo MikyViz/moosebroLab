@@ -7,6 +7,7 @@
           <RouterLink to="/english" class="link">English</RouterLink>
           <RouterLink to="/japanese" class="link">Japanese</RouterLink>
           <RouterLink to="/chemistry" class="link">Chemistry</RouterLink>
+          <RouterLink to="/workouts" class="link">Workouts</RouterLink>
           <RouterLink to="/cleanup" class="link">Cleanup</RouterLink>
         </div>
       </nav>
