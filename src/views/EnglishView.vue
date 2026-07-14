@@ -28,14 +28,14 @@ const activeConditionalBlocks = computed(() => conditionalSections[activeConditi
 </script>
 
 <template>
-  <main class="wrap">
-    <h1 class="main-title">Английская грамматика</h1>
+  <main class="wrap study-wrap">
+    <h1 class="main-title study-main-title">Английская грамматика</h1>
 
-    <div class="tabs">
+    <div class="tabs study-tabs centered">
       <button
         v-for="tab in sectionTabs"
         :key="tab.key"
-        class="tab"
+        class="tab study-tab"
         :class="{ active: activeSection === tab.key }"
         @click="setSection(tab.key)"
       >
@@ -43,8 +43,8 @@ const activeConditionalBlocks = computed(() => conditionalSections[activeConditi
       </button>
     </div>
 
-    <div v-show="activeSection === 'perfects'" class="section">
-      <div v-for="(card, cardIndex) in perfectCards" :key="`perfect-${cardIndex}`" class="card">
+    <section v-show="activeSection === 'perfects'" class="section">
+      <div v-for="(card, cardIndex) in perfectCards" :key="`perfect-${cardIndex}`" class="card study-card">
         <div v-if="card.title" class="card-title">
           {{ card.title }}
           <span v-if="card.badge" class="badge" :class="card.badgeClass">{{ card.badge }}</span>
@@ -60,8 +60,8 @@ const activeConditionalBlocks = computed(() => conditionalSections[activeConditi
         ></div>
       </div>
 
-      <div class="label">Быстрое сравнение</div>
-      <table>
+      <div class="label study-label">Быстрое сравнение</div>
+      <table class="study-table">
         <tr>
           <th v-for="(header, index) in perfectComparisonTable.headers" :key="`perfect-header-${index}`">{{ header }}</th>
         </tr>
@@ -69,14 +69,14 @@ const activeConditionalBlocks = computed(() => conditionalSections[activeConditi
           <td v-for="(cell, cellIndex) in row" :key="`perfect-row-${rowIndex}-cell-${cellIndex}`" v-html="cell"></td>
         </tr>
       </table>
-    </div>
+    </section>
 
-    <div v-show="activeSection === 'conditionals'" class="section">
+    <section v-show="activeSection === 'conditionals'" class="section">
       <div class="subtabs">
         <button
           v-for="tab in conditionalTabs"
           :key="tab.key"
-          class="subtab"
+          class="subtab study-tab"
           :class="{ active: activeConditional === tab.key }"
           @click="activeConditional = tab.key"
         >
@@ -86,7 +86,7 @@ const activeConditionalBlocks = computed(() => conditionalSections[activeConditi
 
       <div v-if="activeConditional !== 'compare'" class="subsection">
         <template v-for="(block, blockIndex) in activeConditionalBlocks" :key="`conditional-${activeConditional}-block-${blockIndex}`">
-          <div v-if="block.type === 'card'" class="card">
+          <div v-if="block.type === 'card'" class="card study-card">
             <div v-if="block.card.title" class="card-title">
               {{ block.card.title }}
               <span v-if="block.card.badge" class="badge" :class="block.card.badgeClass">{{ block.card.badge }}</span>
@@ -95,7 +95,7 @@ const activeConditionalBlocks = computed(() => conditionalSections[activeConditi
             <div v-if="block.card.rule" class="rule" v-html="block.card.rule"></div>
             <div
               v-for="(example, exampleIndex) in block.card.examples ?? []"
-              :key="`conditional-${activeConditional}-card-${blockIndex}-example-${exampleIndex}`"
+              :key="`conditional-card-${blockIndex}-example-${exampleIndex}`"
               class="example"
               :class="example.className"
               v-html="example.html"
@@ -106,7 +106,7 @@ const activeConditionalBlocks = computed(() => conditionalSections[activeConditi
             <div class="warn-title">{{ block.title }}</div>
             <div
               v-for="(example, exampleIndex) in block.examples"
-              :key="`conditional-${activeConditional}-warn-${blockIndex}-example-${exampleIndex}`"
+              :key="`conditional-warn-${blockIndex}-example-${exampleIndex}`"
               class="example"
               :class="example.className"
               v-html="example.html"
@@ -116,8 +116,8 @@ const activeConditionalBlocks = computed(() => conditionalSections[activeConditi
       </div>
 
       <div v-else class="subsection">
-        <div class="label">Все четыре conditional — одним взглядом</div>
-        <table>
+        <div class="label study-label">Все четыре conditional — одним взглядом</div>
+        <table class="study-table">
           <tr>
             <th v-for="(header, index) in conditionalCompareTables.summary.headers" :key="`cond-summary-header-${index}`">{{ header }}</th>
           </tr>
@@ -126,8 +126,8 @@ const activeConditionalBlocks = computed(() => conditionalSections[activeConditi
           </tr>
         </table>
 
-        <div class="label top-gap">Один пример — четыре conditional</div>
-        <table>
+        <div class="label study-label study-top-gap">Один пример — четыре conditional</div>
+        <table class="study-table">
           <tr>
             <th v-for="(header, index) in conditionalCompareTables.oneExample.headers" :key="`cond-example-header-${index}`">{{ header }}</th>
           </tr>
@@ -136,7 +136,7 @@ const activeConditionalBlocks = computed(() => conditionalSections[activeConditi
           </tr>
         </table>
 
-        <div class="label top-gap">Главное правило для всех</div>
+        <div class="label study-label study-top-gap">Главное правило для всех</div>
         <div class="warn-box">
           <div class="warn-title">{{ conditionalCompareTables.finalRule.title }}</div>
           <div
@@ -148,31 +148,26 @@ const activeConditionalBlocks = computed(() => conditionalSections[activeConditi
           ></div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div v-show="activeSection === 'signals'" class="section">
+    <section v-show="activeSection === 'signals'" class="section">
       <template v-for="(item, itemIndex) in signalCards" :key="`signal-${itemIndex}`">
-        <div class="label">{{ item.label }}</div>
-        <div class="card">
-          <div
-            v-for="(rule, ruleIndex) in item.rules"
-            :key="`signal-${itemIndex}-rule-${ruleIndex}`"
-            class="rule"
-            v-html="rule"
-          ></div>
+        <div class="label study-label">{{ item.label }}</div>
+        <div class="card study-card">
+          <div v-for="(rule, ruleIndex) in item.rules" :key="`signal-rule-${itemIndex}-${ruleIndex}`" class="rule" v-html="rule"></div>
           <div
             v-for="(example, exampleIndex) in item.examples"
-            :key="`signal-${itemIndex}-example-${exampleIndex}`"
+            :key="`signal-example-${itemIndex}-${exampleIndex}`"
             class="example"
             v-html="example"
           ></div>
         </div>
       </template>
-    </div>
+    </section>
 
-    <div v-show="activeSection === 'mistakes'" class="section">
-      <div class="label">Твои типичные ошибки из теста</div>
-      <table>
+    <section v-show="activeSection === 'mistakes'" class="section">
+      <div class="label study-label">Твои типичные ошибки из теста</div>
+      <table class="study-table">
         <tr>
           <th v-for="(header, index) in mistakesTable.headers" :key="`mistakes-header-${index}`">{{ header }}</th>
         </tr>
@@ -189,8 +184,8 @@ const activeConditionalBlocks = computed(() => conditionalSections[activeConditi
         </tr>
       </table>
 
-      <div class="label top-gap">Неправильные глаголы, которые тебе нужны</div>
-      <table>
+      <div class="label study-label study-top-gap">Неправильные глаголы, которые тебе нужны</div>
+      <table class="study-table">
         <tr>
           <th v-for="(header, index) in irregularVerbsTable.headers" :key="`verbs-header-${index}`">{{ header }}</th>
         </tr>
@@ -198,57 +193,13 @@ const activeConditionalBlocks = computed(() => conditionalSections[activeConditi
           <td v-for="(cell, cellIndex) in row" :key="`verbs-row-${rowIndex}-cell-${cellIndex}`" v-html="cell"></td>
         </tr>
       </table>
-    </div>
+    </section>
   </main>
 </template>
 
 <style scoped>
 * {
   box-sizing: border-box;
-}
-
-.wrap {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-}
-
-.main-title {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-.tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.tab {
-  padding: 10px 20px;
-  border-radius: var(--radius);
-  border: 0.5px solid var(--border-strong);
-  background: transparent;
-  color: var(--text-secondary);
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.15s;
-}
-
-.tab.active {
-  background: var(--surface-2);
-  color: var(--text-primary);
-  border-color: var(--border-stronger);
-}
-
-.tab:hover:not(.active) {
-  background: var(--surface-1);
 }
 
 .subtabs {
@@ -260,14 +211,9 @@ const activeConditionalBlocks = computed(() => conditionalSections[activeConditi
 
 .subtab {
   padding: 6px 14px;
-  border-radius: var(--radius);
   border: 0.5px solid var(--border);
   background: var(--surface-1);
-  color: var(--text-secondary);
-  cursor: pointer;
   font-size: 13px;
-  font-weight: 500;
-  transition: all 0.15s;
 }
 
 .subtab.active {
@@ -278,14 +224,6 @@ const activeConditionalBlocks = computed(() => conditionalSections[activeConditi
 
 .subtab:hover:not(.active) {
   background: var(--surface-2);
-}
-
-.card {
-  background: var(--surface-2);
-  border: 0.5px solid var(--border);
-  border-radius: 12px;
-  padding: 1rem 1.25rem;
-  margin-bottom: 1rem;
 }
 
 .card-title {
@@ -410,78 +348,9 @@ const activeConditionalBlocks = computed(() => conditionalSections[activeConditi
   font-weight: 600;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-  margin-top: 8px;
-  background: var(--surface-2);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-th {
-  text-align: left;
-  padding: 10px 12px;
-  background: var(--surface-1);
-  color: var(--text-secondary);
-  font-weight: 600;
-  border-bottom: 0.5px solid var(--border-strong);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-td {
-  padding: 10px 12px;
-  border-bottom: 0.5px solid var(--border);
-  color: var(--text-primary);
-  vertical-align: top;
-  line-height: 1.5;
-}
-
-tr:last-child td {
-  border-bottom: none;
-}
-
-.label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin: 1.5rem 0 0.75rem;
-}
-
-.top-gap {
-  margin-top: 1.5rem;
-}
-
 @media (max-width: 600px) {
-  .wrap {
-    padding: 1rem 0.75rem;
-  }
-
-  .main-title {
-    font-size: 22px;
-  }
-
   .tabs {
     justify-content: flex-start;
-  }
-
-  .tab {
-    font-size: 13px;
-    padding: 8px 14px;
-  }
-
-  table {
-    font-size: 12px;
-  }
-
-  th,
-  td {
-    padding: 8px 10px;
   }
 }
 </style>

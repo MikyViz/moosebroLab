@@ -1,0 +1,130 @@
+.study-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.study-main-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.study-subtitle {
+  margin: 0.4rem 0 1.25rem;
+  color: var(--text-secondary);
+}
+
+.study-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.study-tabs.centered {
+  justify-content: center;
+}
+
+.study-tab {
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  border: 0.5px solid var(--border-strong);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+
+.study-tab:hover:not(.active) {
+  background: var(--surface-1);
+}
+
+.study-tab.active {
+  background: var(--surface-2);
+  color: var(--text-primary);
+  border-color: var(--border-stronger);
+}
+
+.study-card {
+  background: var(--surface-2);
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.study-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: 8px;
+  background: var(--surface-2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.study-table th {
+  text-align: left;
+  padding: 10px 12px;
+  background: var(--surface-1);
+  color: var(--text-secondary);
+  font-weight: 600;
+  border-bottom: 0.5px solid var(--border-strong);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.study-table td {
+  padding: 10px 12px;
+  border-bottom: 0.5px solid var(--border);
+  color: var(--text-primary);
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.study-table tr:last-child td {
+  border-bottom: none;
+}
+
+.study-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.study-top-gap {
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 600px) {
+  .study-wrap {
+    padding: 1rem 0.75rem;
+  }
+
+  .study-main-title {
+    font-size: 22px;
+  }
+
+  .study-tab {
+    font-size: 13px;
+    padding: 8px 14px;
+  }
+
+  .study-table {
+    font-size: 12px;
+  }
+
+  .study-table th,
+  .study-table td {
+    padding: 8px 10px;
+  }
+}
