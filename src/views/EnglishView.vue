@@ -1,8 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-
-type SectionKey = 'perfects' | 'conditionals' | 'signals' | 'mistakes'
-type ConditionalKey = 'zero' | 'first' | 'second' | 'third' | 'compare'
+import { computed, ref } from 'vue'
+import {
+  conditionalCompareTables,
+  conditionalSections,
+  conditionalTabs,
+  irregularVerbsTable,
+  mistakesTable,
+  perfectCards,
+  perfectComparisonTable,
+  sectionTabs,
+  signalCards,
+  type ConditionalKey,
+  type SectionKey,
+} from '../data/englishData'
 
 const activeSection = ref<SectionKey>('perfects')
 const activeConditional = ref<ConditionalKey>('zero')
@@ -13,6 +23,8 @@ const setSection = (section: SectionKey) => {
     activeConditional.value = 'zero'
   }
 }
+
+const activeConditionalBlocks = computed(() => conditionalSections[activeConditional.value].blocks)
 </script>
 
 <template>
@@ -20,249 +32,171 @@ const setSection = (section: SectionKey) => {
     <h1 class="main-title">Английская грамматика</h1>
 
     <div class="tabs">
-      <button class="tab" :class="{ active: activeSection === 'perfects' }" @click="setSection('perfects')">Perfect-времена</button>
-      <button class="tab" :class="{ active: activeSection === 'conditionals' }" @click="setSection('conditionals')">Conditionals</button>
-      <button class="tab" :class="{ active: activeSection === 'signals' }" @click="setSection('signals')">Слова-подсказки</button>
-      <button class="tab" :class="{ active: activeSection === 'mistakes' }" @click="setSection('mistakes')">Твои ошибки</button>
+      <button
+        v-for="tab in sectionTabs"
+        :key="tab.key"
+        class="tab"
+        :class="{ active: activeSection === tab.key }"
+        @click="setSection(tab.key)"
+      >
+        {{ tab.label }}
+      </button>
     </div>
 
     <div v-show="activeSection === 'perfects'" class="section">
-      <div class="card">
-        <div class="card-title">Present Perfect <span class="badge badge-blue">have/has + V3</span></div>
-        <div class="formula">have/has + V3 (причастие)</div>
-        <div class="rule">Факт или опыт в прошлом без указания конкретного времени. Важен результат сейчас, или само действие.</div>
-        <div class="example">✅ <span class="correct">I have seen this movie.</span> (факт опыта, не важно когда)</div>
-        <div class="example">✅ <span class="correct">I have worked here for 3 years.</span> (до сих пор работаю)</div>
-        <div class="example">❌ <span class="wrong">I have seen this movie yesterday.</span> (yesterday = конкретное время → Past Simple)</div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">Present Perfect Continuous <span class="badge badge-blue">have been + V-ing</span></div>
-        <div class="formula">have/has + been + V-ing</div>
-        <div class="rule">Действие началось в прошлом и продолжается до сих пор. Акцент на процессе.</div>
-        <div class="example">✅ <span class="correct">I have been working as a freelancer for 3 years.</span></div>
-        <div class="example muted-note">→ лучше чем "I have worked", потому что ты ещё фрилансер</div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">Past Simple <span class="badge badge-warn">V2 (прошедшая форма)</span></div>
-        <div class="formula">V2 (worked / went / saw)</div>
-        <div class="rule">Конкретный завершённый момент в прошлом. Обычно есть указание времени.</div>
-        <div class="example">✅ <span class="correct">I finished the project in March.</span></div>
-        <div class="example">✅ <span class="correct">He lost his job last month.</span></div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">Past Perfect <span class="badge badge-green">had + V3</span></div>
-        <div class="formula">had + V3</div>
-        <div class="rule">"Прошлое до прошлого" — одно событие случилось раньше другого. Ключевые слова: before, after, when, by the time, already.</div>
-        <div class="example">✅ <span class="correct">When the client called, I had already sent the code.</span></div>
-        <div class="example">✅ <span class="correct">We had studied Torah for 7 years before he left the kollel.</span></div>
-        <div class="example muted-note">→ "had studied" (раньше) / "left" (позже)</div>
+      <div v-for="(card, cardIndex) in perfectCards" :key="`perfect-${cardIndex}`" class="card">
+        <div v-if="card.title" class="card-title">
+          {{ card.title }}
+          <span v-if="card.badge" class="badge" :class="card.badgeClass">{{ card.badge }}</span>
+        </div>
+        <div v-if="card.formula" class="formula">{{ card.formula }}</div>
+        <div v-if="card.rule" class="rule" v-html="card.rule"></div>
+        <div
+          v-for="(example, exampleIndex) in card.examples ?? []"
+          :key="`perfect-${cardIndex}-example-${exampleIndex}`"
+          class="example"
+          :class="example.className"
+          v-html="example.html"
+        ></div>
       </div>
 
       <div class="label">Быстрое сравнение</div>
       <table>
-        <tr><th>Время</th><th>Когда?</th><th>Пример</th></tr>
-        <tr><td>Past Simple</td><td>конкретный момент в прошлом</td><td>I saw him yesterday.</td></tr>
-        <tr><td>Present Perfect</td><td>прошлое, важно сейчас</td><td>I have seen him. (уже видел)</td></tr>
-        <tr><td>Pres. Perfect Cont.</td><td>началось в прошлом, длится</td><td>I have been waiting for an hour.</td></tr>
-        <tr><td>Past Perfect</td><td>раньше другого прошлого</td><td>I had finished before he called.</td></tr>
+        <tr>
+          <th v-for="(header, index) in perfectComparisonTable.headers" :key="`perfect-header-${index}`">{{ header }}</th>
+        </tr>
+        <tr v-for="(row, rowIndex) in perfectComparisonTable.rows" :key="`perfect-row-${rowIndex}`">
+          <td v-for="(cell, cellIndex) in row" :key="`perfect-row-${rowIndex}-cell-${cellIndex}`" v-html="cell"></td>
+        </tr>
       </table>
     </div>
 
     <div v-show="activeSection === 'conditionals'" class="section">
       <div class="subtabs">
-        <button class="subtab" :class="{ active: activeConditional === 'zero' }" @click="activeConditional = 'zero'">Zero</button>
-        <button class="subtab" :class="{ active: activeConditional === 'first' }" @click="activeConditional = 'first'">First</button>
-        <button class="subtab" :class="{ active: activeConditional === 'second' }" @click="activeConditional = 'second'">Second</button>
-        <button class="subtab" :class="{ active: activeConditional === 'third' }" @click="activeConditional = 'third'">Third</button>
-        <button class="subtab" :class="{ active: activeConditional === 'compare' }" @click="activeConditional = 'compare'">Сравнение</button>
+        <button
+          v-for="tab in conditionalTabs"
+          :key="tab.key"
+          class="subtab"
+          :class="{ active: activeConditional === tab.key }"
+          @click="activeConditional = tab.key"
+        >
+          {{ tab.label }}
+        </button>
       </div>
 
-      <div v-show="activeConditional === 'zero'" class="subsection">
-        <div class="card">
-          <div class="card-title">Zero Conditional <span class="badge badge-0">всегда истина</span></div>
-          <div class="formula">If + Present Simple, ... Present Simple</div>
-          <div class="rule">Универсальные факты, законы природы, привычки. То, что всегда правда.</div>
-          <div class="example">✅ <span class="correct">If you heat water to 100°C, it boils.</span></div>
-          <div class="example">✅ <span class="correct">If I drink coffee late, I can't sleep.</span></div>
-          <div class="example">✅ <span class="correct">If the server crashes, the app goes down.</span></div>
-        </div>
-        <div class="card">
-          <div class="rule">Можно заменить "if" на "when" — смысл не меняется:</div>
-          <div class="example"><span class="correct">When you heat water to 100°C, it boils.</span></div>
-        </div>
+      <div v-if="activeConditional !== 'compare'" class="subsection">
+        <template v-for="(block, blockIndex) in activeConditionalBlocks" :key="`conditional-${activeConditional}-block-${blockIndex}`">
+          <div v-if="block.type === 'card'" class="card">
+            <div v-if="block.card.title" class="card-title">
+              {{ block.card.title }}
+              <span v-if="block.card.badge" class="badge" :class="block.card.badgeClass">{{ block.card.badge }}</span>
+            </div>
+            <div v-if="block.card.formula" class="formula">{{ block.card.formula }}</div>
+            <div v-if="block.card.rule" class="rule" v-html="block.card.rule"></div>
+            <div
+              v-for="(example, exampleIndex) in block.card.examples ?? []"
+              :key="`conditional-${activeConditional}-card-${blockIndex}-example-${exampleIndex}`"
+              class="example"
+              :class="example.className"
+              v-html="example.html"
+            ></div>
+          </div>
+
+          <div v-else class="warn-box">
+            <div class="warn-title">{{ block.title }}</div>
+            <div
+              v-for="(example, exampleIndex) in block.examples"
+              :key="`conditional-${activeConditional}-warn-${blockIndex}-example-${exampleIndex}`"
+              class="example"
+              :class="example.className"
+              v-html="example.html"
+            ></div>
+          </div>
+        </template>
       </div>
 
-      <div v-show="activeConditional === 'first'" class="subsection">
-        <div class="card">
-          <div class="card-title">First Conditional <span class="badge badge-1">реальное будущее</span></div>
-          <div class="formula">If + Present Simple, ... will + verb</div>
-          <div class="rule">Ситуация реальная и возможная в будущем. Есть реальный шанс, что это случится.</div>
-          <div class="example">✅ <span class="correct">If I find a client this week, I will buy presents for the kids.</span></div>
-          <div class="example">✅ <span class="correct">If you finish the bug fix today, we will deploy it tomorrow.</span></div>
-        </div>
-        <div class="warn-box">
-          <div class="warn-title">⚠️ Главное правило — после IF нет WILL</div>
-          <div class="example">❌ <span class="wrong">If I will find a client...</span></div>
-          <div class="example">✅ <span class="correct">If I find a client...</span></div>
-        </div>
-        <div class="card">
-          <div class="rule">Вместо will можно использовать: <span class="keyword">can, might, should, must</span></div>
-          <div class="example"><span class="correct">If you call him now, he <span class="keyword">might</span> answer.</span></div>
-        </div>
-      </div>
-
-      <div v-show="activeConditional === 'second'" class="subsection">
-        <div class="card">
-          <div class="card-title">Second Conditional <span class="badge badge-2">гипотетическое</span></div>
-          <div class="formula">If + Past Simple, ... would + verb</div>
-          <div class="rule">Ситуация нереальная или маловероятная. Мечты, фантазии, советы ("If I were you...").</div>
-          <div class="example">✅ <span class="correct">If I had more experience, clients would not leave me.</span></div>
-          <div class="example">✅ <span class="correct">If I were a senior developer, I would not worry about money.</span></div>
-          <div class="example">✅ <span class="correct">If I had no children, I would move to another country.</span></div>
-        </div>
-        <div class="card">
-          <div class="rule">С "I" формально используем <span class="keyword">were</span>, не "was":</div>
-          <div class="example">✅ <span class="correct">If I <span class="keyword">were</span> rich...</span> (формально)</div>
-          <div class="example muted-note">В разговорной речи "was" тоже принято.</div>
-        </div>
-        <div class="warn-box">
-          <div class="warn-title">⚠️ После IF нет WOULD</div>
-          <div class="example">❌ <span class="wrong">If I would have more time...</span></div>
-          <div class="example">✅ <span class="correct">If I had more time...</span></div>
-        </div>
-      </div>
-
-      <div v-show="activeConditional === 'third'" class="subsection">
-        <div class="card">
-          <div class="card-title">Third Conditional <span class="badge badge-3">прошлое нереальное</span></div>
-          <div class="formula">If + Past Perfect (had + V3), ... would have + V3</div>
-          <div class="rule">Прошлое, которое уже нельзя изменить. Сожаление, размышление "что было бы если бы..."</div>
-          <div class="example">✅ <span class="correct">If I had known Vue.js earlier, I would have gotten that job.</span></div>
-          <div class="example">✅ <span class="correct">If I had not left that project, the client wouldn't have left.</span></div>
-          <div class="example">✅ <span class="correct">If she hadn't called on time, we would have missed the deadline.</span></div>
-        </div>
-        <div class="card">
-          <div class="rule">Обе части могут быть отрицательными:</div>
-          <div class="example"><span class="correct">If he <span class="keyword">hadn't</span> made that mistake, we <span class="keyword">wouldn't have lost</span> the client.</span></div>
-        </div>
-        <div class="warn-box">
-          <div class="warn-title">⚠️ Самая частая ошибка</div>
-          <div class="example">❌ <span class="wrong">If I would have known... / If I had have known...</span></div>
-          <div class="example">✅ <span class="correct">If I had known...</span></div>
-        </div>
-      </div>
-
-      <div v-show="activeConditional === 'compare'" class="subsection">
+      <div v-else class="subsection">
         <div class="label">Все четыре conditional — одним взглядом</div>
         <table>
           <tr>
-            <th>Тип</th>
-            <th>If-часть</th>
-            <th>Главная часть</th>
-            <th>Смысл</th>
+            <th v-for="(header, index) in conditionalCompareTables.summary.headers" :key="`cond-summary-header-${index}`">{{ header }}</th>
           </tr>
-          <tr>
-            <td><strong>Zero</strong></td>
-            <td>Present Simple</td>
-            <td>Present Simple</td>
-            <td>Всегда правда, факт</td>
-          </tr>
-          <tr>
-            <td><strong>First</strong></td>
-            <td>Present Simple</td>
-            <td>will + V</td>
-            <td>Реально, возможно в будущем</td>
-          </tr>
-          <tr>
-            <td><strong>Second</strong></td>
-            <td>Past Simple</td>
-            <td>would + V</td>
-            <td>Гипотетически, нереально</td>
-          </tr>
-          <tr>
-            <td><strong>Third</strong></td>
-            <td>Past Perfect (had+V3)</td>
-            <td>would have + V3</td>
-            <td>Прошлое, уже не изменить</td>
+          <tr v-for="(row, rowIndex) in conditionalCompareTables.summary.rows" :key="`cond-summary-row-${rowIndex}`">
+            <td v-for="(cell, cellIndex) in row" :key="`cond-summary-row-${rowIndex}-cell-${cellIndex}`" v-html="cell"></td>
           </tr>
         </table>
 
         <div class="label top-gap">Один пример — четыре conditional</div>
         <table>
-          <tr><th>Тип</th><th>Предложение</th></tr>
-          <tr><td>Zero</td><td>If I <span class="keyword">work</span> hard, I <span class="keyword">get</span> good results.</td></tr>
-          <tr><td>First</td><td>If I <span class="keyword">find</span> a client, I <span class="keyword">will earn</span> money.</td></tr>
-          <tr><td>Second</td><td>If I <span class="keyword">had</span> more clients, I <span class="keyword">would earn</span> more.</td></tr>
-          <tr><td>Third</td><td>If I <span class="keyword">had found</span> a client then, I <span class="keyword">would have earned</span> money.</td></tr>
+          <tr>
+            <th v-for="(header, index) in conditionalCompareTables.oneExample.headers" :key="`cond-example-header-${index}`">{{ header }}</th>
+          </tr>
+          <tr v-for="(row, rowIndex) in conditionalCompareTables.oneExample.rows" :key="`cond-example-row-${rowIndex}`">
+            <td v-for="(cell, cellIndex) in row" :key="`cond-example-row-${rowIndex}-cell-${cellIndex}`" v-html="cell"></td>
+          </tr>
         </table>
 
         <div class="label top-gap">Главное правило для всех</div>
         <div class="warn-box">
-          <div class="warn-title">⚠️ После IF никогда не ставим WILL или WOULD</div>
-          <div class="example">❌ <span class="wrong">If I will find... / If I would have...</span></div>
-          <div class="example">✅ <span class="correct">If I find... / If I had... / If I had found...</span></div>
+          <div class="warn-title">{{ conditionalCompareTables.finalRule.title }}</div>
+          <div
+            v-for="(example, exampleIndex) in conditionalCompareTables.finalRule.examples"
+            :key="`cond-final-rule-${exampleIndex}`"
+            class="example"
+            :class="example.className"
+            v-html="example.html"
+          ></div>
         </div>
       </div>
     </div>
 
     <div v-show="activeSection === 'signals'" class="section">
-      <div class="label">Present Perfect</div>
-      <div class="card">
-        <div class="rule">Слова-сигналы: <span class="keyword">already, yet, ever, never, just, recently, so far, for, since</span></div>
-        <div class="example">✅ I have <span class="keyword">already</span> finished. / Have you <span class="keyword">ever</span> been to Japan? / I haven't done it <span class="keyword">yet</span>.</div>
-      </div>
-
-      <div class="label">Past Simple</div>
-      <div class="card">
-        <div class="rule">Слова-сигналы: <span class="keyword">yesterday, last week/month/year, ago, in 2020, when I was...</span></div>
-        <div class="example">✅ I finished it <span class="keyword">last month</span>. / He left <span class="keyword">two years ago</span>.</div>
-      </div>
-
-      <div class="label">Past Perfect</div>
-      <div class="card">
-        <div class="rule">Слова-сигналы: <span class="keyword">before, after, when, by the time, already, just</span> (в контексте двух прошлых событий)</div>
-        <div class="example">✅ <span class="keyword">By the time</span> he arrived, I had already left.</div>
-        <div class="example">✅ I had finished <span class="keyword">before</span> she called.</div>
-      </div>
-
-      <div class="label">Артикли (твоя слабая зона)</div>
-      <div class="card">
-        <div class="rule"><span class="keyword">a/an</span> — впервые упоминаем, неопределённый предмет: "I am <span class="keyword">a</span> freelancer"</div>
-        <div class="rule"><span class="keyword">the</span> — уже известный предмет, конкретный: "I fixed <span class="keyword">the</span> bug"</div>
-        <div class="rule"><span class="keyword">без артикля</span> — профессии после "work as": "I work as <span class="keyword">a</span> developer" (НЕ без артикля!)</div>
-        <div class="example">❌ <span class="wrong">I work as freelancer</span> → ✅ <span class="correct">I work as a freelancer</span></div>
-      </div>
+      <template v-for="(item, itemIndex) in signalCards" :key="`signal-${itemIndex}`">
+        <div class="label">{{ item.label }}</div>
+        <div class="card">
+          <div
+            v-for="(rule, ruleIndex) in item.rules"
+            :key="`signal-${itemIndex}-rule-${ruleIndex}`"
+            class="rule"
+            v-html="rule"
+          ></div>
+          <div
+            v-for="(example, exampleIndex) in item.examples"
+            :key="`signal-${itemIndex}-example-${exampleIndex}`"
+            class="example"
+            v-html="example"
+          ></div>
+        </div>
+      </template>
     </div>
 
     <div v-show="activeSection === 'mistakes'" class="section">
       <div class="label">Твои типичные ошибки из теста</div>
       <table>
-        <tr><th>Твой вариант</th><th>Правильно</th><th>Почему</th></tr>
-        <tr><td class="wrong keep-red">I saw this movie before</td><td class="correct keep-green">I have seen this movie before</td><td>нет конкретного времени → Present Perfect</td></tr>
-        <tr><td class="wrong keep-red">If I will have more time</td><td class="correct keep-green">If I had more time</td><td>will после if запрещено + это Second Conditional</td></tr>
-        <tr><td class="wrong keep-red">He don't like coffee</td><td class="correct keep-green">He doesn't like coffee</td><td>для he/she/it → doesn't</td></tr>
-        <tr><td class="wrong keep-red">I work as freelancer for 3 years</td><td class="correct keep-green">I have been working as a freelancer for 3 years</td><td>артикль "a" + Pres. Perfect Cont. (длится сейчас)</td></tr>
-        <tr><td class="wrong keep-red">I had already forgot</td><td class="correct keep-green">I had already forgotten</td><td>forget → forgot → forgotten (V3)</td></tr>
-        <tr><td class="wrong keep-red">I would be worryed</td><td class="correct keep-green">I would be worried</td><td>worry → worried (y → ied)</td></tr>
-        <tr><td class="wrong keep-red">he had already leaven</td><td class="correct keep-green">he had already left</td><td>leave → left → left (неправильный глагол)</td></tr>
+        <tr>
+          <th v-for="(header, index) in mistakesTable.headers" :key="`mistakes-header-${index}`">{{ header }}</th>
+        </tr>
+        <tr v-for="(row, rowIndex) in mistakesTable.rows" :key="`mistakes-row-${rowIndex}`">
+          <td
+            v-for="(cell, cellIndex) in row"
+            :key="`mistakes-row-${rowIndex}-cell-${cellIndex}`"
+            :class="{
+              'wrong keep-red': cellIndex === 0,
+              'correct keep-green': cellIndex === 1,
+            }"
+            v-html="cell"
+          ></td>
+        </tr>
       </table>
 
       <div class="label top-gap">Неправильные глаголы, которые тебе нужны</div>
       <table>
-        <tr><th>Base</th><th>Past Simple (V2)</th><th>Past Participle (V3)</th></tr>
-        <tr><td>forget</td><td>forgot</td><td>forgotten</td></tr>
-        <tr><td>leave</td><td>left</td><td>left</td></tr>
-        <tr><td>lose</td><td>lost</td><td>lost</td></tr>
-        <tr><td>write</td><td>wrote</td><td>written</td></tr>
-        <tr><td>send</td><td>sent</td><td>sent</td></tr>
-        <tr><td>find</td><td>found</td><td>found</td></tr>
-        <tr><td>give</td><td>gave</td><td>given</td></tr>
-        <tr><td>know</td><td>knew</td><td>known</td></tr>
-        <tr><td>take</td><td>took</td><td>taken</td></tr>
-        <tr><td>see</td><td>saw</td><td>seen</td></tr>
+        <tr>
+          <th v-for="(header, index) in irregularVerbsTable.headers" :key="`verbs-header-${index}`">{{ header }}</th>
+        </tr>
+        <tr v-for="(row, rowIndex) in irregularVerbsTable.rows" :key="`verbs-row-${rowIndex}`">
+          <td v-for="(cell, cellIndex) in row" :key="`verbs-row-${rowIndex}-cell-${cellIndex}`" v-html="cell"></td>
+        </tr>
       </table>
     </div>
   </main>
