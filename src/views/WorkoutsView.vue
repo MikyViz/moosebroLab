@@ -10,12 +10,22 @@ type BodyView = 'front' | 'back'
 
 type WorkoutMode = 'full' | 'min'
 
+const weekdayIds = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const
+
+const getCurrentWeekdayId = () => weekdayIds[new Date().getDay()]
+
 const activeSection = ref<MainSection>('anatomy')
 const bodyView = ref<BodyView>('front')
 const activePatternId = ref(workoutPatterns[0]?.id ?? '')
-const activeDayId = ref('mon')
+const activeDayId = ref<string>(getCurrentWeekdayId())
 const workoutMode = ref<WorkoutMode>('full')
 const doneState = ref<Record<string, boolean>>({})
+
+const currentWeekdayLabel = new Intl.DateTimeFormat('ru-RU', { weekday: 'short' })
+  .format(new Date())
+  .replace(/^./, (char) => char.toUpperCase())
+
+const programTabLabel = `Программа · ${currentWeekdayLabel}`
 
 const activePattern = computed(() => workoutPatterns.find((item) => item.id === activePatternId.value) ?? workoutPatterns[0])
 const activeDay = computed(() => workoutWeek.find((item) => item.id === activeDayId.value) ?? workoutWeek[0])
@@ -38,6 +48,11 @@ const setPattern = (patternId: string) => {
   }
   activePatternId.value = pattern.id
   bodyView.value = pattern.view
+}
+
+const openProgramSection = () => {
+  activeSection.value = 'program'
+  activeDayId.value = getCurrentWeekdayId()
 }
 
 const setDay = (dayId: string) => {
@@ -68,7 +83,7 @@ const isExerciseDone = (dayId: string, index: number) => !!doneState.value[getEx
 
     <nav class="section-nav study-tabs">
       <button class="study-tab" :class="{ active: activeSection === 'anatomy' }" @click="activeSection = 'anatomy'">Анатомия</button>
-      <button class="study-tab" :class="{ active: activeSection === 'program' }" @click="activeSection = 'program'">Программа</button>
+      <button class="study-tab" :class="{ active: activeSection === 'program' }" @click="openProgramSection">{{ programTabLabel }}</button>
     </nav>
 
     <section v-show="activeSection === 'anatomy'" class="content-section">
