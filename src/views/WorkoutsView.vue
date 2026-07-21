@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, ref } from 'vue'
+import { computed, defineAsyncComponent, onMounted, onBeforeUnmount, ref, watch } from 'vue'
 import { shoulderBonusNote, workoutPatterns, workoutWeek } from '../data/workoutData'
 
 const WorkoutBodySvg = defineAsyncComponent(() => import('../components/WorkoutBodySvg.vue'))
@@ -11,15 +11,56 @@ type BodyView = 'front' | 'back'
 type WorkoutMode = 'full' | 'min'
 
 const weekdayIds = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const
+const workoutProgressStorageKey = 'moosebroLab.workouts.progress'
 
 const getCurrentWeekdayId = () => weekdayIds[new Date().getDay()]
+
+const getTodayKey = () => {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+const readStoredProgress = () => {
+  if (typeof window === 'undefined') {
+    return {}
+  }
+
+  try {
+    const rawValue = window.localStorage.getItem(workoutProgressStorageKey)
+    if (!rawValue) {
+      return {}
+    }
+
+    const parsed = JSON.parse(rawValue) as { date?: string; state?: Record<string, boolean> }
+    return parsed.date === getTodayKey() && parsed.state ? parsed.state : {}
+  } catch {
+    return {}
+  }
+}
+
+const saveStoredProgress = (state: Record<string, boolean>) => {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  window.localStorage.setItem(
+    workoutProgressStorageKey,
+    JSON.stringify({
+      date: getTodayKey(),
+      state,
+    }),
+  )
+}
 
 const activeSection = ref<MainSection>('anatomy')
 const bodyView = ref<BodyView>('front')
 const activePatternId = ref(workoutPatterns[0]?.id ?? '')
 const activeDayId = ref<string>(getCurrentWeekdayId())
 const workoutMode = ref<WorkoutMode>('full')
-const doneState = ref<Record<string, boolean>>({})
+const doneState = ref<Record<string, boolean>>(readStoredProgress())
 
 const currentWeekdayLabel = new Intl.DateTimeFormat('ru-RU', { weekday: 'short' })
   .format(new Date())
@@ -71,6 +112,30 @@ const toggleExercise = (dayId: string, index: number) => {
 }
 
 const isExerciseDone = (dayId: string, index: number) => !!doneState.value[getExerciseKey(dayId, workoutMode.value, index)]
+
+let dayChangeTimer: number | undefined
+
+watch(
+  doneState,
+  (state) => {
+    saveStoredProgress(state)
+  },
+  { deep: true },
+)
+
+onMounted(() => {
+  dayChangeTimer = window.setInterval(() => {
+    if (readStoredProgress() && Object.keys(readStoredProgress()).length === 0) {
+      doneState.value = {}
+    }
+  }, 60 * 1000)
+})
+
+onBeforeUnmount(() => {
+  if (dayChangeTimer) {
+    window.clearInterval(dayChangeTimer)
+  }
+})
 </script>
 
 <template>
