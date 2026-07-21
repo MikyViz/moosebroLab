@@ -3,8 +3,9 @@ import { defineAsyncComponent, ref } from 'vue'
 
 const ChemConspectView = defineAsyncComponent(() => import('./ChemConspectView.vue'))
 const WaterIceDemoView = defineAsyncComponent(() => import('./WaterIceDemoView.vue'))
+const CovalentBondOHView = defineAsyncComponent(() => import('./CovalentBondOHView.vue'))
 
-type ChemistryTab = 'conspect' | 'demo'
+type ChemistryTab = 'conspect' | 'demo' | 'bond'
 
 const activeTab = ref<ChemistryTab>('conspect')
 </script>
@@ -17,6 +18,7 @@ const activeTab = ref<ChemistryTab>('conspect')
     <div class="chem-tabs study-tabs">
       <button class="chem-tab study-tab" :class="{ active: activeTab === 'conspect' }" @click="activeTab = 'conspect'">Конспект 01</button>
       <button class="chem-tab study-tab" :class="{ active: activeTab === 'demo' }" @click="activeTab = 'demo'">Вода vs Лёд</button>
+      <button class="chem-tab study-tab" :class="{ active: activeTab === 'bond' }" @click="activeTab = 'bond'">Ковалентная O-H</button>
     </div>
 
     <section v-show="activeTab === 'conspect'" class="chem-panel">
@@ -25,6 +27,10 @@ const activeTab = ref<ChemistryTab>('conspect')
 
     <section v-show="activeTab === 'demo'" class="chem-panel">
       <WaterIceDemoView />
+    </section>
+
+    <section v-show="activeTab === 'bond'" class="chem-panel">
+      <CovalentBondOHView />
     </section>
   </main>
 </template>
