@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, ref } from 'vue'
-import { workoutPatterns, workoutWeek } from '../data/workoutData'
+import { shoulderBonusNote, workoutPatterns, workoutWeek } from '../data/workoutData'
 
 const WorkoutBodySvg = defineAsyncComponent(() => import('../components/WorkoutBodySvg.vue'))
 
@@ -8,14 +8,28 @@ type MainSection = 'anatomy' | 'program'
 
 type BodyView = 'front' | 'back'
 
+type WorkoutMode = 'full' | 'min'
+
 const activeSection = ref<MainSection>('anatomy')
 const bodyView = ref<BodyView>('front')
 const activePatternId = ref(workoutPatterns[0]?.id ?? '')
 const activeDayId = ref('mon')
+const workoutMode = ref<WorkoutMode>('full')
 const doneState = ref<Record<string, boolean>>({})
 
 const activePattern = computed(() => workoutPatterns.find((item) => item.id === activePatternId.value) ?? workoutPatterns[0])
 const activeDay = computed(() => workoutWeek.find((item) => item.id === activeDayId.value) ?? workoutWeek[0])
+
+const activeExercises = computed(() => {
+  const day = activeDay.value
+  if (!day || day.rest) {
+    return []
+  }
+  if (workoutMode.value === 'min' && day.min?.length) {
+    return day.min
+  }
+  return day.ex ?? []
+})
 
 const setPattern = (patternId: string) => {
   const pattern = workoutPatterns.find((item) => item.id === patternId)
@@ -30,14 +44,18 @@ const setDay = (dayId: string) => {
   activeDayId.value = dayId
 }
 
-const getExerciseKey = (dayId: string, index: number) => `${dayId}-${index}`
+const setMode = (mode: WorkoutMode) => {
+  workoutMode.value = mode
+}
+
+const getExerciseKey = (dayId: string, mode: WorkoutMode, index: number) => `${dayId}-${mode}-${index}`
 
 const toggleExercise = (dayId: string, index: number) => {
-  const key = getExerciseKey(dayId, index)
+  const key = getExerciseKey(dayId, workoutMode.value, index)
   doneState.value[key] = !doneState.value[key]
 }
 
-const isExerciseDone = (dayId: string, index: number) => !!doneState.value[getExerciseKey(dayId, index)]
+const isExerciseDone = (dayId: string, index: number) => !!doneState.value[getExerciseKey(dayId, workoutMode.value, index)]
 </script>
 
 <template>
@@ -96,6 +114,12 @@ const isExerciseDone = (dayId: string, index: number) => !!doneState.value[getEx
       <h2 class="study-main-title section-title">Недельная программа</h2>
       <p class="section-lede">Вс-Чт активные дни. Пт и Сб по самочувствию: легкий формат или полный отдых.</p>
 
+      <div class="mode-toggle">
+        <button class="study-tab" :class="{ active: workoutMode === 'full' }" @click="setMode('full')">Полная программа</button>
+        <button class="study-tab" :class="{ active: workoutMode === 'min' }" @click="setMode('min')">Минимум</button>
+        <span v-if="workoutMode === 'min'" class="mode-hint">— короткая версия из знакомых упражнений, без раздумий</span>
+      </div>
+
       <div class="study-tabs day-tabs">
         <button
           v-for="day in workoutWeek"
@@ -110,14 +134,14 @@ const isExerciseDone = (dayId: string, index: number) => !!doneState.value[getEx
 
       <div v-if="activeDay" class="day-panel">
         <h3 class="day-title">{{ activeDay.title }}</h3>
-        <p class="day-focus">{{ activeDay.focus }}</p>
+        <p class="day-focus">{{ activeDay.focus }}<template v-if="!activeDay.rest && workoutMode === 'min'"> · минимум</template></p>
 
         <div v-if="activeDay.rest" class="rest-note study-card">{{ activeDay.note }}</div>
 
         <div v-else class="exlist">
           <div
-            v-for="(exercise, index) in activeDay.ex ?? []"
-            :key="`${activeDay.id}-${exercise.n}`"
+            v-for="(exercise, index) in activeExercises"
+            :key="`${activeDay.id}-${workoutMode}-${exercise.n}`"
             class="ex study-card"
             :class="{ done: isExerciseDone(activeDay.id, index) }"
             @click="toggleExercise(activeDay.id, index)"
@@ -135,6 +159,11 @@ const isExerciseDone = (dayId: string, index: number) => !!doneState.value[getEx
       <article class="callout study-card">
         <h4>Про тяговые движения</h4>
         <p>Без турника полноценно закрыть тягу сложно, а это важно для осанки. Среда частично компенсирует, но при возможности дверной турник или резинка-эспандер заметно улучшат баланс программы.</p>
+      </article>
+
+      <article class="callout callout-bonus study-card">
+        <h4>Бонус на плечи</h4>
+        <p>{{ shoulderBonusNote }}</p>
       </article>
     </section>
   </main>
@@ -255,6 +284,20 @@ const isExerciseDone = (dayId: string, index: number) => !!doneState.value[getEx
   border-radius: 999px;
 }
 
+.mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.mode-hint {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin-left: 0.2rem;
+}
+
 .day-tabs {
   margin-bottom: 1rem;
 }
@@ -359,6 +402,14 @@ const isExerciseDone = (dayId: string, index: number) => !!doneState.value[getEx
 .callout p {
   margin: 0;
   color: var(--text-secondary);
+}
+
+.callout-bonus {
+  border-left-color: var(--text-accent);
+}
+
+.callout-bonus h4 {
+  color: var(--text-accent);
 }
 
 @media (max-width: 900px) {
