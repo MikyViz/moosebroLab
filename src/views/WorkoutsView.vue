@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, onMounted, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { shoulderBonusNote, workoutPatterns, workoutWeek } from '../data/workoutData'
 
 const WorkoutBodySvg = defineAsyncComponent(() => import('../components/WorkoutBodySvg.vue'))
@@ -35,8 +35,14 @@ const readStoredProgress = () => {
     }
 
     const parsed = JSON.parse(rawValue) as { date?: string; state?: Record<string, boolean> }
-    return parsed.date === getTodayKey() && parsed.state ? parsed.state : {}
+    if (parsed.date === getTodayKey() && parsed.state) {
+      return parsed.state
+    }
+
+    window.localStorage.removeItem(workoutProgressStorageKey)
+    return {}
   } catch {
+    window.localStorage.removeItem(workoutProgressStorageKey)
     return {}
   }
 }
@@ -113,7 +119,9 @@ const toggleExercise = (dayId: string, index: number) => {
 
 const isExerciseDone = (dayId: string, index: number) => !!doneState.value[getExerciseKey(dayId, workoutMode.value, index)]
 
-let dayChangeTimer: number | undefined
+const syncStoredProgress = () => {
+  doneState.value = readStoredProgress()
+}
 
 watch(
   doneState,
@@ -124,17 +132,15 @@ watch(
 )
 
 onMounted(() => {
-  dayChangeTimer = window.setInterval(() => {
-    if (readStoredProgress() && Object.keys(readStoredProgress()).length === 0) {
-      doneState.value = {}
-    }
-  }, 60 * 1000)
+  syncStoredProgress()
+
+  window.addEventListener('focus', syncStoredProgress)
+  document.addEventListener('visibilitychange', syncStoredProgress)
 })
 
 onBeforeUnmount(() => {
-  if (dayChangeTimer) {
-    window.clearInterval(dayChangeTimer)
-  }
+  window.removeEventListener('focus', syncStoredProgress)
+  document.removeEventListener('visibilitychange', syncStoredProgress)
 })
 </script>
 
