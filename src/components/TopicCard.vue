@@ -23,11 +23,11 @@ const expanded = ref(false)
 
 <template>
   <article class="card" :style="{ borderLeftColor: props.topic.color }">
-    <div class="card-header" @click="expanded = !expanded">
+    <button class="card-header" type="button" :aria-expanded="expanded" @click="expanded = !expanded">
       <span class="card-icon">{{ props.topic.icon }}</span>
       <h3>{{ props.topic.title }}</h3>
       <span class="arrow" :class="{ rotated: expanded }">▼</span>
-    </div>
+    </button>
 
     <Transition name="expand">
       <div v-if="expanded" class="card-body">
@@ -62,9 +62,26 @@ const expanded = ref(false)
   display: flex;
   align-items: center;
   gap: 12px;
+  width: 100%;
   padding: 16px;
+  border: 0;
+  margin: 0;
+  text-align: left;
+  font: inherit;
+  background: transparent;
+  color: inherit;
   cursor: pointer;
   user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.card-header:hover {
+  background: var(--surface-1);
+}
+
+.card-header:focus-visible {
+  outline: 2px solid var(--text-accent);
+  outline-offset: -2px;
 }
 
 .card-icon {
@@ -75,6 +92,7 @@ const expanded = ref(false)
   flex: 1;
   margin: 0;
   font-size: 1.05rem;
+  line-height: 1.35;
 }
 
 .arrow {
@@ -94,28 +112,37 @@ const expanded = ref(false)
 
 .point {
   display: flex;
-  gap: 8px;
-  padding: 8px 0;
+  gap: 12px;
+  padding: 12px 0;
+  align-items: flex-start;
   flex-wrap: wrap;
 }
 
 .point-label {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-accent);
-  min-width: 140px;
+  min-width: 112px;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
 }
 
 .point-text {
   color: var(--text-secondary);
-  line-height: 1.5;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  flex: 1;
+  min-width: 0;
 }
 
 .code-block {
-  background: #1e1e2e;
-  color: #cdd6f4;
+  background: var(--surface-1);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
   padding: 12px 16px;
   border-radius: 8px;
+  line-height: 1.45;
   font-size: 0.85rem;
+  font-family: var(--font-mono);
   overflow-x: auto;
   margin: 8px 0;
 }
@@ -134,13 +161,14 @@ const expanded = ref(false)
 }
 
 .takeaway {
-  background: color-mix(in srgb, var(--bg-accent) 45%, var(--surface-2));
-  border-left: 3px solid var(--text-accent);
-  padding: 10px 14px;
+  background: color-mix(in srgb, var(--bg-accent) 30%, var(--surface-2));
+  border-left: 4px solid var(--text-accent);
+  padding: 12px 14px;
   border-radius: 4px;
-  margin-top: 8px;
+  margin-top: 12px;
   font-style: italic;
   color: var(--text-primary);
+  line-height: 1.55;
 }
 
 .expand-enter-active,
@@ -158,6 +186,55 @@ const expanded = ref(false)
 .expand-enter-to,
 .expand-leave-from {
   opacity: 1;
-  max-height: 800px;
+  max-height: 1400px;
+}
+
+@media (max-width: 640px) {
+  .card-header {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .card-icon {
+    font-size: 1.25rem;
+  }
+
+  .card-header h3 {
+    font-size: 0.98rem;
+  }
+
+  .card-body {
+    padding: 0 12px 12px;
+  }
+
+  .point {
+    gap: 10px;
+    padding: 10px 0;
+  }
+
+  .point-label {
+    min-width: 100px;
+    font-size: 0.86rem;
+  }
+
+  .point-text {
+    font-size: 0.9rem;
+  }
+
+  .code-block {
+    padding: 10px 12px;
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .point {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .point-label {
+    min-width: 0;
+  }
 }
 </style>

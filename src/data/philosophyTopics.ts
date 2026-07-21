@@ -1,5 +1,6 @@
 export type PhilosophyTopic = {
   id: number
+  category: Exclude<PhilosophyCategory, 'Все'>
   title: string
   icon: string
   color: string
@@ -10,9 +11,13 @@ export type PhilosophyTopic = {
   takeaway?: string
 }
 
+export const philosophyCategories = ['Все', 'Западная', 'Восточная', 'Практика'] as const
+export type PhilosophyCategory = (typeof philosophyCategories)[number]
+
 export const philosophyTopics: PhilosophyTopic[] = [
   {
     id: 4,
+    category: 'Западная',
     title: 'Стоицизм',
     icon: '🏛️',
     color: '#2ed573',
@@ -25,6 +30,7 @@ export const philosophyTopics: PhilosophyTopic[] = [
   },
   {
     id: 5,
+    category: 'Восточная',
     title: 'Восточные учения',
     icon: '🧘',
     color: '#1abc9c',
@@ -37,6 +43,7 @@ export const philosophyTopics: PhilosophyTopic[] = [
   },
   {
     id: 6,
+    category: 'Практика',
     title: 'Рефлексия',
     icon: '🪞',
     color: '#9b59b6',
