@@ -10,15 +10,15 @@ type BodyView = 'front' | 'back'
 
 type WorkoutMode = 'full' | 'min'
 
-const weekdayIds = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const
-const workoutProgressStorageKey = 'moosebroLab.workouts.progress'
+const weekdayIds = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const // ?as const?
+const workoutProgressStorageKey = 'moosebroLab.workouts.progress' //?
 
 const getCurrentWeekdayId = () => weekdayIds[new Date().getDay()]
 
 const getTodayKey = () => {
   const now = new Date()
   const year = now.getFullYear()
-  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const month = String(now.getMonth() + 1).padStart(2, '0') // ? padStart? почему тут стринг а выше  нет?
   const day = String(now.getDate()).padStart(2, '0')
   return `${year}-${month}-${day}`
 }
