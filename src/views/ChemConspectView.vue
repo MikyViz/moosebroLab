@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { chemistryConspectSections as sections, chemistryConspectTags as tags } from '../data/chemistryConspectData'
+import { reactive } from "vue";
+import {
+  chemistryConspectSections as sections,
+  chemistryConspectTags as tags,
+} from "../data/chemistryConspectData";
 
-const open = reactive(sections.map((_, index) => index === 0))
+const open = reactive(sections.map((_, index) => index === 0));
 
 const toggle = (index: number) => {
-  open[index] = !open[index]
-}
+  open[index] = !open[index];
+};
 </script>
 
 <template>
@@ -14,12 +17,19 @@ const toggle = (index: number) => {
     <header class="chem1-header">
       <p class="chem1-eyebrow">Конспект · химия с нуля · 01</p>
       <h2>Атомы, связи и странности воды</h2>
-      <p class="chem1-meta">Атом → периодическая таблица → ионная связь → ковалентная связь → водородные связи → почему лёд плавает</p>
+      <p class="chem1-meta">
+        От строения атома до буферных растворов и агрегатных состояний —
+        фундамент неорганической химии
+      </p>
     </header>
 
-    <div v-for="(section, index) in sections" :key="section.title" class="chem1-section">
+    <div
+      v-for="(section, index) in sections"
+      :key="section.title"
+      class="chem1-section"
+    >
       <div class="chem1-head" @click="toggle(index)">
-        <span class="chem1-num">{{ String(index + 1).padStart(2, '0') }}</span>
+        <span class="chem1-num">{{ String(index + 1).padStart(2, "0") }}</span>
         <span class="chem1-title">{{ section.title }}</span>
         <span class="chem1-arrow" :class="{ open: open[index] }">▶</span>
       </div>
@@ -43,9 +53,9 @@ const toggle = (index: number) => {
   --red: #a13d3d;
   --red-soft: #f1dcdc;
   --white: #fdfbf5;
-  font-family: Georgia, 'Times New Roman', serif;
-  background:
-    linear-gradient(var(--paper-line) 1px, transparent 1px) 0 0 / 100% 27px,
+  font-family: Georgia, "Times New Roman", serif;
+  background: linear-gradient(var(--paper-line) 1px, transparent 1px) 0 0 / 100%
+      27px,
     var(--paper);
   color: var(--ink);
   padding: 30px 26px 40px;
@@ -56,7 +66,7 @@ const toggle = (index: number) => {
 }
 
 .chem1-wrap::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 52px;
   top: 0;
@@ -168,7 +178,7 @@ const toggle = (index: number) => {
 }
 
 .chem1-body :deep(.chem1-example) {
-  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
   font-size: 13px;
   background: var(--white);
   border: 1px solid var(--paper-line);
