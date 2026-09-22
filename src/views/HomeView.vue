@@ -31,6 +31,10 @@
         <h2>Cleanup</h2>
         <p>Monthly cleanup cheatsheet</p>
       </RouterLink>
+      <RouterLink to="/russian" class="card">
+        <h2>Russian</h2>
+        <p>Алфавит, карточки и игра для детей</p>
+      </RouterLink>
     </nav>
   </main>
 </template>
