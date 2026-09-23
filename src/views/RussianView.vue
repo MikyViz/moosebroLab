@@ -29,6 +29,9 @@ function pickLetter(letter: string) {
   activeLetter.value = letter
   speak(letterNames[letter])
 }
+function lower(letter: string) {
+  return letter.toLowerCase()
+}
 
 // Flashcards tab
 const cardIndex = ref(0)
@@ -114,7 +117,7 @@ newRound()
 
     <section v-show="activeTab === 'alphabet'" class="russian-panel">
       <div class="card study-card russian-card">
-        <div class="russian-big">{{ activeLetter }}</div>
+        <div class="russian-big russian-big-letters">{{ activeLetter }}{{ lower(activeLetter) }}</div>
         <div class="russian-rowbtns">
           <button class="russian-action" @click="speak(letterNames[activeLetter])">🔊 Сказать</button>
         </div>
@@ -126,7 +129,7 @@ newRound()
           class="russian-letter"
           @click="pickLetter(letter)"
         >
-          {{ letter }}
+          {{ letter }}{{ lower(letter) }}
         </button>
       </div>
     </section>
@@ -181,6 +184,11 @@ newRound()
   font-size: 80px;
   line-height: 1;
   margin: 6px 0 14px;
+}
+
+.russian-big-letters {
+  font-size: 64px;
+  letter-spacing: 6px;
 }
 
 .russian-word {
