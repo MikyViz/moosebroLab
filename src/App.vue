@@ -11,6 +11,7 @@
           <RouterLink to="/chemistry" class="link">Chemistry</RouterLink>
           <RouterLink to="/workouts" class="link">Workouts</RouterLink>
           <RouterLink to="/cleanup" class="link">Cleanup</RouterLink>
+          <RouterLink to="/russian" class="link">Russian</RouterLink>
         </div>
       </nav>
     </header>
