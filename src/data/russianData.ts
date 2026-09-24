@@ -41,5 +41,12 @@ export const russianWords: RussianWord[] = [
   { ru: 'земля', en: 'earth', emoji: '🌍' },
   { ru: 'лось', en: 'moose', emoji: '🫎' },
   { ru: 'облако', en: 'cloud', emoji: '☁️' },
-  { ru: 'дождь', en: 'rain', emoji: '🌧️' }
+  { ru: 'дождь', en: 'rain', emoji: '🌧️' },
+  { ru: 'ветер', en: 'wind', emoji: '💨' },
+  { ru: 'молния', en: 'lightning', emoji: '⚡' },
+  { ru: 'деньги', en: 'money', emoji: '💰' },
+  { ru: 'сердце', en: 'heart', emoji: '❤️' },
+  { ru: 'бобер', en: 'beaver', emoji: '🦫' },
+  { ru: 'лиса', en: 'fox', emoji: '🦊' },
+  { ru: 'волк', en: 'wolf', emoji: '🐺' }
 ]
