@@ -242,11 +242,6 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
-      <article class="callout study-card">
-        <h4>Про тяговые движения</h4>
-        <p>Без турника полноценно закрыть тягу сложно, а это важно для осанки. Среда частично компенсирует, но при возможности дверной турник или резинка-эспандер заметно улучшат баланс программы.</p>
-      </article>
-
       <article class="callout callout-bonus study-card">
         <h4>Бонус на плечи</h4>
         <p>{{ shoulderBonusNote }}</p>
