@@ -4,8 +4,8 @@ import { grammarData } from '../data/grammarData'
 import { hiragana, radicals } from '../data/japaneseData'
 
 type TabKey = 'hiragana' | 'radicals' | 'grammar' | 'quiz'
-type DayFilter = 'all' | 'day1' | 'day2' | 'day3' | 'day4'
-type GrammarDay = 'day2' | 'day3' | 'day4'
+type DayFilter = 'all' | 'day1' | 'day2' | 'day3' | 'day4' | 'day5'
+type GrammarDay = 'day2' | 'day3' | 'day4' | 'day5'
 
 type QuizItem = {
   ch: string
@@ -236,6 +236,7 @@ resetQuiz()
         <button class="filter-btn study-tab" :class="{ active: hiraganaFilter === 'day2' }" @click="hiraganaFilter = 'day2'">День 2 (さ, た)</button>
         <button class="filter-btn study-tab" :class="{ active: hiraganaFilter === 'day3' }" @click="hiraganaFilter = 'day3'">День 3 (な, は)</button>
         <button class="filter-btn study-tab" :class="{ active: hiraganaFilter === 'day4' }" @click="hiraganaFilter = 'day4'">День 4 (ま, や)</button>
+        <button class="filter-btn study-tab" :class="{ active: hiraganaFilter === 'day5' }" @click="hiraganaFilter = 'day5'">День 5 (ら, わ)</button>
       </div>
 
       <div class="card-grid">
@@ -254,6 +255,7 @@ resetQuiz()
         <button class="filter-btn study-tab" :class="{ active: radicalsFilter === 'day2' }" @click="radicalsFilter = 'day2'">День 2 (火–小)</button>
         <button class="filter-btn study-tab" :class="{ active: radicalsFilter === 'day3' }" @click="radicalsFilter = 'day3'">День 3 (月–女)</button>
         <button class="filter-btn study-tab" :class="{ active: radicalsFilter === 'day4' }" @click="radicalsFilter = 'day4'">День 4 (心–子)</button>
+        <button class="filter-btn study-tab" :class="{ active: radicalsFilter === 'day5' }" @click="radicalsFilter = 'day5'">День 5 (田–竹)</button>
       </div>
 
       <div class="card-grid">
@@ -272,6 +274,7 @@ resetQuiz()
         <button class="filter-btn study-tab" :class="{ active: grammarDay === 'day2' }" @click="grammarDay = 'day2'">День 2</button>
         <button class="filter-btn study-tab" :class="{ active: grammarDay === 'day3' }" @click="grammarDay = 'day3'">День 3</button>
         <button class="filter-btn study-tab" :class="{ active: grammarDay === 'day4' }" @click="grammarDay = 'day4'">День 4</button>
+        <button class="filter-btn study-tab" :class="{ active: grammarDay === 'day5' }" @click="grammarDay = 'day5'">День 5</button>
       </div>
 
       <div id="grammar-content">
@@ -306,6 +309,7 @@ resetQuiz()
         <button class="filter-btn study-tab" :class="{ active: quizFilter === 'day2' }" @click="setQuizFilter('day2')">День 2</button>
         <button class="filter-btn study-tab" :class="{ active: quizFilter === 'day3' }" @click="setQuizFilter('day3')">День 3</button>
         <button class="filter-btn study-tab" :class="{ active: quizFilter === 'day4' }" @click="setQuizFilter('day4')">День 4</button>
+        <button class="filter-btn study-tab" :class="{ active: quizFilter === 'day5' }" @click="setQuizFilter('day5')">День 5</button>
       </div>
 
       <div class="quiz-container">
