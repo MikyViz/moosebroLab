@@ -1,7 +1,3 @@
-
-
-
-Chemistryconspect · TS
 export type ConspectSection = {
   title: string
   body: string
