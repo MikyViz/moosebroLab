@@ -2,7 +2,7 @@ export type HiraganaItem = {
   ch: string
   r: string
   mnemonic: string
-  day: 1 | 2 | 3 | 4
+  day: 1 | 2 | 3 | 4 | 5
 }
 
 export type RadicalItem = {
@@ -10,7 +10,7 @@ export type RadicalItem = {
   r: string
   meaning: string
   mnemonic: string
-  day: 1 | 2 | 3 | 4
+  day: 1 | 2 | 3 | 4 | 5
 }
 
 export const hiragana: HiraganaItem[] = [
@@ -52,6 +52,15 @@ export const hiragana: HiraganaItem[] = [
   { ch: 'や', r: 'ya', mnemonic: 'Якорь брошен в воду — цепь натягивается со звуком: "я!"', day: 4 },
   { ch: 'ゆ', r: 'yu', mnemonic: 'Рыба с хвостом плывет в потоке — вода теплая, как юшка', day: 4 },
   { ch: 'よ', r: 'yo', mnemonic: 'Вилка с двумя зубцами — тычешь ею в еду и говоришь "йо!"', day: 4 },
+  { ch: 'ら', r: 'ra', mnemonic: 'РАкета взлетает — хвост пламени загибается вниз, как хвостик знака', day: 5 },
+  { ch: 'り', r: 'ri', mnemonic: 'Две травинки РИтмично качаются на ветру — "ри-ри-ри"', day: 5 },
+  { ch: 'る', r: 'ru', mnemonic: 'РУлетка раскручивается в спираль — конец улетает со звуком "ру-у"', day: 5 },
+  { ch: 'れ', r: 're', mnemonic: 'РЕка течёт — петля-излучина в нижней части знака', day: 5 },
+  { ch: 'ろ', r: 'ro', mnemonic: 'РОт открыт — та же петля что в "ре", но без хвоста, как закрытое "о"', day: 5 },
+  { ch: 'わ', r: 'wa', mnemonic: 'ВАза с изогнутым горлышком — ставишь её на стол: "ва!"', day: 5 },
+  { ch: 'を', r: 'o', mnemonic: 'Особый знак — только для частицы объекта を, форма как "о" с засечкой-крышкой сверху', day: 5 },
+  { ch: 'ん', r: 'n', mnemonic: 'Единственный знак без гласной — похож на "ん" как на кивок "н-да" с закрытым ртом', day: 5 },
+
 ]
 
 export const radicals: RadicalItem[] = [
@@ -75,4 +84,9 @@ export const radicals: RadicalItem[] = [
   { ch: '食', r: 'shoku', meaning: 'еда', mnemonic: 'Крышка над миской — открываешь крышку и вдыхаешь запах: "шо-ку"', day: 4 },
   { ch: '力', r: 'chikara / ryoku', meaning: 'сила', mnemonic: 'Согнутая рука с мышцей — напрягаешь бицепс', day: 4 },
   { ch: '子', r: 'ko / shi', meaning: 'ребенок', mnemonic: 'Маленький человечек с большой головой — зовешь его: "ко"', day: 4 },
+  { ch: '田', r: 'ta / den', meaning: 'рисовое поле', mnemonic: 'Клетки рисового поля — крестьянин кричит через поле: "та-та!"', day: 5 },
+  { ch: '糸', r: 'ito / shi', meaning: 'нить', mnemonic: 'Клубок нити с узелком — нить тянется со звуком "ши-и"', day: 5 },
+  { ch: '門', r: 'mon', meaning: 'ворота', mnemonic: 'Две створки ворот — стражник стоит у МОНумента-ворот', day: 5 },
+  { ch: '雨', r: 'ame / u', meaning: 'дождь', mnemonic: 'Облако с капельками-точками под ним — дождь барабанит: "ame-ame"', day: 5 },
+  { ch: '竹', r: 'take', meaning: 'бамбук', mnemonic: 'Два стебля бамбука с листьями — стучат друг о друга: "та-кэ"', day: 5 },
 ]
