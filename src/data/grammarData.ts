@@ -11,7 +11,7 @@ export type GrammarEntry = {
   notes: string | null
 }
 
-export const grammarData: Record<'day2' | 'day3' | 'day4', GrammarEntry[]> = {
+export const grammarData: Record<'day2' | 'day3' | 'day4' | 'day5', GrammarEntry[]> = {
   day2: [
     {
       topic: 'は (wa) — частица темы',
@@ -84,6 +84,21 @@ export const grammarData: Record<'day2' | 'day3' | 'day4', GrammarEntry[]> = {
       },
       notes:
         'Базовая эвристика: は = тема/контраст, が = субъект.',
+    },
+  ],
+  day5: [
+    {
+      topic: 'の (no) — притяжательная частица',
+      reading: 'no',
+      explanation:
+        'Указывает на принадлежность или отношение между существительными.',
+      structure: '[Существительное1]の[Существительное2]',
+      example: {
+        jp: '私の本',
+        romaji: 'watashi no hon',
+        ru: 'Моя книга',
+      },
+      notes: null,
     },
   ],
 }
