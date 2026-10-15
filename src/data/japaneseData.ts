@@ -7,8 +7,9 @@ export type HiraganaItem = {
 
 export type RadicalItem = {
   ch: string
-  kun: string   // разговорное чтение (кунное)
-  on: string    // чтение в составных словах (онное)
+  kun: string     // разговорное чтение (кунное), латиницей
+  on: string      // чтение в составных словах (онное), латиницей
+  kana: string    // кун-чтение хираганой
   meaning: string
   mnemonic: string
   day: 1 | 2 | 3 | 4 | 5
@@ -64,29 +65,29 @@ export const hiragana: HiraganaItem[] = [
 ]
 
 export const radicals: RadicalItem[] = [
-  { ch: '人', kun: 'hito',    on: 'nin / jin',      meaning: 'человек',         mnemonic: 'Шагающий человечек (форма = две ноги в движении)', day: 1 },
-  { ch: '木', kun: 'ki',      on: 'moku / boku',    meaning: 'дерево',          mnemonic: 'Ствол с расходящимися ветвями, который пилят со звуком "ки-и-и"', day: 1 },
-  { ch: '日', kun: 'hi / ka', on: 'nichi / jitsu',  meaning: 'солнце / день',   mnemonic: 'Квадрат-солнце светит и говорит тебе "hi"', day: 1 },
-  { ch: '水', kun: 'mizu',    on: 'sui',             meaning: 'вода',            mnemonic: 'Потоки воды всасываются через трубочку со звуком "свии"', day: 1 },
-  { ch: '山', kun: 'yama',    on: 'san',             meaning: 'гора',            mnemonic: 'Три пика на горизонте — альпинист кричит "йа-ма"', day: 1 },
-  { ch: '火', kun: 'hi',      on: 'ka',              meaning: 'огонь',           mnemonic: 'Языки пламени расходятся и вспыхивают со звуком "ка"', day: 2 },
-  { ch: '土', kun: 'tsuchi',  on: 'do / to',         meaning: 'земля',           mnemonic: 'Росток-крест пробивается из почвы с глухим стуком: "до-о"', day: 2 },
-  { ch: '金', kun: 'kane',    on: 'kin / kon',       meaning: 'золото / металл', mnemonic: 'Крыша над землей с двумя самородками-точками', day: 2 },
-  { ch: '大', kun: 'ookii',   on: 'dai / tai',       meaning: 'большой',         mnemonic: 'Человек, широко раскинувший руки и ноги', day: 2 },
-  { ch: '小', kun: 'chiisai', on: 'shou',            meaning: 'маленький',       mnemonic: 'Три маленькие капли/точки падают с тихим звуком: "шшш"', day: 2 },
-  { ch: '月', kun: 'tsuki',   on: 'getsu / gatsu',   meaning: 'луна / месяц',    mnemonic: 'Полумесяц с засечкой внутри — смотришь на луну и тянешь: "цуки-и"', day: 3 },
-  { ch: '手', kun: 'te',      on: 'shu',             meaning: 'рука',            mnemonic: 'Три пальца расходятся от запястья — протягиваешь руку (te)', day: 3 },
-  { ch: '口', kun: 'kuchi',   on: 'kou',             meaning: 'рот',             mnemonic: 'Простой квадрат — открытый рот, который кусает что-то со звуком "ку"', day: 3 },
-  { ch: '目', kun: 'me',      on: 'moku / boku',     meaning: 'глаз',            mnemonic: 'Прямоугольник с веками-чертами — прищуриваешься и говоришь "ме?"', day: 3 },
-  { ch: '女', kun: 'onna',    on: 'jo / nyo',        meaning: 'женщина',         mnemonic: 'Изящный изгиб фигуры — кто-то восхищенно тянет: "о-он-на"', day: 3 },
-  { ch: '心', kun: 'kokoro',  on: 'shin / jin',      meaning: 'сердце',          mnemonic: 'Три капли-удара пульса — сердце стучит: "ко-ко-ро"', day: 4 },
-  { ch: '言', kun: 'iu / koto', on: 'gen / gon',     meaning: 'слово / речь',    mnemonic: 'Рот с волнами-строчками под ним — слова льются волнами', day: 4 },
-  { ch: '食', kun: 'taberu',  on: 'shoku / jiki',    meaning: 'еда',             mnemonic: 'Крышка над миской — открываешь крышку и вдыхаешь запах: "шо-ку"', day: 4 },
-  { ch: '力', kun: 'chikara', on: 'ryoku / riki',    meaning: 'сила',            mnemonic: 'Согнутая рука с мышцей — напрягаешь бицепс', day: 4 },
-  { ch: '子', kun: 'ko',      on: 'shi / su',        meaning: 'ребёнок',         mnemonic: 'Маленький человечек с большой головой — зовешь его: "ко"', day: 4 },
-  { ch: '田', kun: 'ta',      on: 'den',             meaning: 'рисовое поле',    mnemonic: 'Клетки рисового поля — крестьянин кричит через поле: "та-та!"', day: 5 },
-  { ch: '糸', kun: 'ito',     on: 'shi',             meaning: 'нить',            mnemonic: 'Клубок нити с узелком — нить тянется со звуком "ши-и"', day: 5 },
-  { ch: '門', kun: 'kado',    on: 'mon',             meaning: 'ворота',          mnemonic: 'Две створки ворот — стражник стоит у МОНумента-ворот', day: 5 },
-  { ch: '雨', kun: 'ame',     on: 'u',               meaning: 'дождь',           mnemonic: 'Облако с капельками-точками под ним — дождь барабанит: "ame-ame"', day: 5 },
-  { ch: '竹', kun: 'take',    on: 'chiku',           meaning: 'бамбук',          mnemonic: 'Два стебля бамбука с листьями — стучат друг о друга: "та-кэ"', day: 5 },
+  { ch: '人', kun: 'hito',    on: 'nin / jin',    kana: 'ひと',     meaning: 'человек',         mnemonic: 'Шагающий человечек (форма = две ноги в движении)', day: 1 },
+  { ch: '木', kun: 'ki',      on: 'moku / boku',  kana: 'き',       meaning: 'дерево',          mnemonic: 'Ствол с расходящимися ветвями, который пилят со звуком "ки-и-и"', day: 1 },
+  { ch: '日', kun: 'hi / ka', on: 'nichi / jitsu', kana: 'ひ',      meaning: 'солнце / день',   mnemonic: 'Квадрат-солнце светит и говорит тебе "hi"', day: 1 },
+  { ch: '水', kun: 'mizu',    on: 'sui',           kana: 'みず',     meaning: 'вода',            mnemonic: 'Потоки воды всасываются через трубочку со звуком "свии"', day: 1 },
+  { ch: '山', kun: 'yama',    on: 'san',           kana: 'やま',     meaning: 'гора',            mnemonic: 'Три пика на горизонте — альпинист кричит "йа-ма"', day: 1 },
+  { ch: '火', kun: 'hi',      on: 'ka',            kana: 'ひ',       meaning: 'огонь',           mnemonic: 'Языки пламени расходятся и вспыхивают со звуком "ка"', day: 2 },
+  { ch: '土', kun: 'tsuchi',  on: 'do / to',       kana: 'つち',     meaning: 'земля',           mnemonic: 'Росток-крест пробивается из почвы с глухим стуком: "до-о"', day: 2 },
+  { ch: '金', kun: 'kane',    on: 'kin / kon',     kana: 'かね',     meaning: 'золото / металл', mnemonic: 'Крыша над землей с двумя самородками-точками', day: 2 },
+  { ch: '大', kun: 'ookii',   on: 'dai / tai',     kana: 'おおきい', meaning: 'большой',         mnemonic: 'Человек, широко раскинувший руки и ноги', day: 2 },
+  { ch: '小', kun: 'chiisai', on: 'shou',          kana: 'ちいさい', meaning: 'маленький',       mnemonic: 'Три маленькие капли/точки падают с тихим звуком: "шшш"', day: 2 },
+  { ch: '月', kun: 'tsuki',   on: 'getsu / gatsu', kana: 'つき',     meaning: 'луна / месяц',    mnemonic: 'Полумесяц с засечкой внутри — смотришь на луну и тянешь: "цуки-и"', day: 3 },
+  { ch: '手', kun: 'te',      on: 'shu',           kana: 'て',       meaning: 'рука',            mnemonic: 'Три пальца расходятся от запястья — протягиваешь руку (te)', day: 3 },
+  { ch: '口', kun: 'kuchi',   on: 'kou',           kana: 'くち',     meaning: 'рот',             mnemonic: 'Простой квадрат — открытый рот, который кусает что-то со звуком "ку"', day: 3 },
+  { ch: '目', kun: 'me',      on: 'moku / boku',   kana: 'め',       meaning: 'глаз',            mnemonic: 'Прямоугольник с веками-чертами — прищуриваешься и говоришь "ме?"', day: 3 },
+  { ch: '女', kun: 'onna',    on: 'jo / nyo',      kana: 'おんな',   meaning: 'женщина',         mnemonic: 'Изящный изгиб фигуры — кто-то восхищенно тянет: "о-он-на"', day: 3 },
+  { ch: '心', kun: 'kokoro',  on: 'shin / jin',    kana: 'こころ',   meaning: 'сердце',          mnemonic: 'Три капли-удара пульса — сердце стучит: "ко-ко-ро"', day: 4 },
+  { ch: '言', kun: 'iu / koto', on: 'gen / gon',   kana: 'いう',     meaning: 'слово / речь',    mnemonic: 'Рот с волнами-строчками под ним — слова льются волнами', day: 4 },
+  { ch: '食', kun: 'taberu',  on: 'shoku / jiki',  kana: 'たべる',   meaning: 'еда',             mnemonic: 'Крышка над миской — открываешь крышку и вдыхаешь запах: "шо-ку"', day: 4 },
+  { ch: '力', kun: 'chikara', on: 'ryoku / riki',  kana: 'ちから',   meaning: 'сила',            mnemonic: 'Согнутая рука с мышцей — напрягаешь бицепс', day: 4 },
+  { ch: '子', kun: 'ko',      on: 'shi / su',      kana: 'こ',       meaning: 'ребёнок',         mnemonic: 'Маленький человечек с большой головой — зовешь его: "ко"', day: 4 },
+  { ch: '田', kun: 'ta',      on: 'den',           kana: 'た',       meaning: 'рисовое поле',    mnemonic: 'Клетки рисового поля — крестьянин кричит через поле: "та-та!"', day: 5 },
+  { ch: '糸', kun: 'ito',     on: 'shi',           kana: 'いと',     meaning: 'нить',            mnemonic: 'Клубок нити с узелком — нить тянется со звуком "ши-и"', day: 5 },
+  { ch: '門', kun: 'kado',    on: 'mon',           kana: 'かど',     meaning: 'ворота',          mnemonic: 'Две створки ворот — стражник стоит у МОНумента-ворот', day: 5 },
+  { ch: '雨', kun: 'ame',     on: 'u',             kana: 'あめ',     meaning: 'дождь',           mnemonic: 'Облако с капельками-точками под ним — дождь барабанит: "ame-ame"', day: 5 },
+  { ch: '竹', kun: 'take',    on: 'chiku',         kana: 'たけ',     meaning: 'бамбук',          mnemonic: 'Два стебля бамбука с листьями — стучат друг о друга: "та-кэ"', day: 5 },
 ]
