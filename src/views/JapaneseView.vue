@@ -115,7 +115,16 @@ const speak = (text: string) => {
   const voice = window.speechSynthesis
     .getVoices()
     .find((v) => v.lang.replace("_", "-").startsWith("ja"));
-  if (voice) u.voice = voice;
+  if (voice) {
+    u.voice = voice;
+  } else {
+    // Без установленного японского голоса браузер озвучит текст
+    // дефолтным голосом (часто беззвучно/неразборчиво).
+    console.warn(
+      "[JapaneseView] Японский голос не найден в speechSynthesis.getVoices(). " +
+        "Установи японский голос в настройках ОС (Windows: Параметры → Время и язык → Речь → Добавить голоса → 日本語)."
+    );
+  }
   window.speechSynthesis.cancel();
   window.speechSynthesis.speak(u);
 };
