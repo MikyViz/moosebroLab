@@ -18,6 +18,8 @@ export const letterNames: Record<string, string> = {
 export const russianWords: RussianWord[] = [
   { ru: 'мама', en: 'mom', emoji: '👩' },
   { ru: 'папа', en: 'dad', emoji: '👨' },
+  { ru: 'дедушка', en: 'grandpa', emoji: '👴' },
+  { ru: 'бабушка', en: 'grandma', emoji: '👵' },
   { ru: 'яблоко', en: 'apple', emoji: '🍎' },
   { ru: 'молоко', en: 'milk', emoji: '🥛' },
   { ru: 'хлеб', en: 'bread', emoji: '🍞' },
@@ -85,6 +87,8 @@ export const russianWords: RussianWord[] = [
   { ru: 'курица', en: 'chicken', emoji: '🐔' },
   { ru: 'утка', en: 'duck', emoji: '🦆' },
   { ru: 'космонавт', en: 'astronaut', emoji: '👩‍🚀' },
+  { ru: 'невеста', en: 'bride', emoji: '👰' },
+  { ru: 'жених', en: 'groom', emoji: '🤵' },
   { ru: 'пилот', en: 'pilot', emoji: '👨‍✈️' },
   { ru: 'врач', en: 'doctor', emoji: '👩‍⚕️' },
   { ru: 'учитель', en: 'teacher', emoji: '👩‍🏫' },
