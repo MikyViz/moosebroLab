@@ -349,6 +349,8 @@ function onFinish(r: RoundResult) {
 }
 
 .app :deep(.cell.rule) {
+  grid-column: 2 / -1;
+  min-height: 0;
   border-top: 3px solid var(--text-primary);
 }
 

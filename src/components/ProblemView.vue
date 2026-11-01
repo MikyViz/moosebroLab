@@ -27,6 +27,7 @@ const boxes = computed(() => Array.from({ length: n.value }, (_, i) => n.value -
         <div v-for="(ch, i) in pad(problem.a)" :key="'a' + i" class="cell">{{ ch.trim() }}</div>
         <div class="cell sign">{{ problem.op }}</div>
         <div v-for="(ch, i) in pad(problem.b)" :key="'b' + i" class="cell">{{ ch.trim() }}</div>
+        <div class="cell sign"></div>
         <div class="cell rule"></div>
         <div class="cell sign"></div>
         <div v-for="k in boxes" :key="'r' + k" class="cell in" :class="{ act: k === buf.length }">
