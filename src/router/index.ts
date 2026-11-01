@@ -8,6 +8,7 @@ import WorkoutsView from '../views/WorkoutsView.vue'
 import PhilosophyView from '../views/PhilosophyView.vue'
 import ProgrammingView from '../views/ProgrammingView.vue'
 import RussianView from '../views/RussianView.vue'
+import KidsMathView from '../views/KidsMathView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -57,6 +58,11 @@ const router = createRouter({
       name: 'russian',
       component: RussianView,
     },
+    {
+      path: '/kids-math',
+      name: 'kids-math',
+      component: KidsMathView,
+    }
   ],
 })
 

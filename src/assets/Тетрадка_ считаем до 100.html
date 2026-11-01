@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Тетрадка: считаем до 100</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#fbfbf4;--grid:#cfe3f1;--ink:#1d3a8a;--text:#1b2540;--muted:#5b6785;--card:#ffffff;--ok:#16825a;--bad:#c62f5f;--fix:#d98a00;--hl:#ffe36e;--hlt:#1b2540;--line:#a9b9d9;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#161c2c;--grid:#222d46;--ink:#a9c0ff;--text:#e8edff;--muted:#9aa7c7;--card:#1f2740;--ok:#4cd39b;--bad:#ff7a9f;--fix:#ffb938;--hl:#5b4b0e;--hlt:#fff3c0;--line:#3a4a72;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#161c2c;--grid:#222d46;--ink:#a9c0ff;--text:#e8edff;--muted:#9aa7c7;--card:#1f2740;--ok:#4cd39b;--bad:#ff7a9f;--fix:#ffb938;--hl:#5b4b0e;--hlt:#fff3c0;--line:#3a4a72;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100vh;background-color:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;color:var(--text);font-family:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:600}
+#app{max-width:520px;margin:0 auto;padding:18px 16px 28px}
+h1{font-size:34px;line-height:1.1;margin:8px 0 6px;color:var(--ink);font-weight:800}
+.sub{margin:0 0 14px;color:var(--muted);line-height:1.4}
+.total{display:inline-block;background:var(--hl);color:var(--hlt);padding:4px 12px;border-radius:999px;font-weight:800;margin-bottom:10px}
+.grp{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:12px;margin:12px 0}
+.grp h2{font-size:17px;margin:0 0 8px;color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+button{font:inherit;color:inherit;cursor:pointer}
+.chip{border:2px solid var(--line);background:var(--paper);border-radius:10px;padding:8px 12px;font-weight:700;text-align:left}
+.chip small{display:block;font-weight:600;color:var(--muted);font-size:13px}
+.chip[aria-pressed="true"]{background:var(--hl);color:var(--hlt);border-color:var(--ink)}
+.chip[aria-pressed="true"] small{color:var(--hlt)}
+.go{width:100%;margin-top:6px;border:0;background:var(--ink);color:var(--paper);font-weight:800;font-size:22px;padding:14px;border-radius:14px}
+.ghost{border:2px solid var(--line);background:var(--card);border-radius:10px;padding:6px 12px;font-weight:700}
+button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.dots{display:flex;gap:6px}
+.d{width:16px;height:16px;border-radius:50%;border:2px solid var(--line);background:var(--card)}
+.d.ok{background:var(--ok);border-color:var(--ok)}.d.fix{background:var(--fix);border-color:var(--fix)}.d.bad{background:var(--bad);border-color:var(--bad)}
+.sheet{background:var(--card);border:2px solid var(--line);border-radius:16px;margin:14px 0 10px;padding:18px 12px;min-height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.line{display:flex;align-items:center;gap:10px;font-size:44px;font-weight:800;color:var(--ink);flex-wrap:wrap;justify-content:center}
+.ans{min-width:100px;height:68px;padding:0 10px;border:3px solid var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--paper)}
+.ans.act,.cell.act{background:var(--hl);color:var(--hlt);border-color:var(--ink)}
+.col{display:grid;gap:4px 6px;font-size:44px;font-weight:800;color:var(--ink)}
+.cell{width:62px;height:62px;display:flex;align-items:center;justify-content:center}
+.cell.sign{width:40px}
+.cell.rule{grid-column:1/-1;height:0;border-top:4px solid var(--ink);margin:2px 0}
+.cell.in{border:3px solid var(--line);border-radius:10px;background:var(--paper)}
+.tip{font-size:14px;color:var(--muted);text-align:center;margin:0}
+.msg{min-height:64px;margin:0 0 10px;line-height:1.4;font-size:16px}
+.msg b{font-size:19px}.msg.ok b{color:var(--ok)}.msg.bad b{color:var(--bad)}
+.next{margin-top:8px;border:0;background:var(--ink);color:var(--paper);font-weight:800;padding:10px 18px;border-radius:10px;font-size:17px}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pad button{height:58px;font-size:26px;font-weight:800;border:2px solid var(--line);background:var(--card);border-radius:12px}
+.pad button:active{background:var(--hl);color:var(--hlt)}
+.pad .enter{background:var(--ok);color:#fff;border-color:var(--ok)}
+.stars{font-size:56px;text-align:center;letter-spacing:6px;color:var(--fix);margin:6px 0}
+.res{text-align:center}.res h1{margin-bottom:4px}
+.miss{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:10px 14px;margin:12px 0;text-align:left}
+.miss div{font-size:19px;padding:3px 0;color:var(--ink);font-weight:800}
+.row{display:flex;gap:10px}.row .go{margin-top:0}.row .alt{flex:1;background:var(--card);color:var(--ink);border:2px solid var(--ink)}
+.tabs{display:flex;gap:6px;margin-bottom:6px}
+.tabs button{flex:1;border:2px solid var(--line);background:var(--card);border-radius:12px;padding:10px 6px;font-weight:800}
+.tabs button[aria-pressed="true"]{background:var(--hl);color:var(--hlt);border-color:var(--ink)}
+.num{min-width:52px;text-align:center;font-size:20px;font-weight:800}
+.tbl{gap:2px;align-items:stretch;padding:10px 14px}
+.trow{display:flex;justify-content:space-between;align-items:center;border:0;border-bottom:1px dashed var(--line);background:transparent;font-size:28px;font-weight:800;color:var(--ink);padding:4px 6px}
+.trow b.hid{color:transparent;background:var(--hl);border-radius:8px;min-width:64px}
+.study-tip{background:var(--card);border:2px solid var(--line);border-radius:12px;padding:10px 14px;margin:0 0 12px;line-height:1.4}
+@media (prefers-reduced-motion:no-preference){.stars{animation:pop .5s ease-out}@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}}
+@media (max-width:380px){.line{font-size:36px}.cell{width:54px;height:54px}.col{font-size:38px}}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+const $=s=>document.querySelector(s);
+const cfg={level:2,op:'mix',fmt:'mix'};
+let save={stars:0,best:{}};
+try{const s=JSON.parse(localStorage.getItem('tetradka:v1')||'null');if(s)save=s}catch(e){}
+const persist=()=>{try{localStorage.setItem('tetradka:v1',JSON.stringify(save))}catch(e){}};
+const rnd=n=>Math.floor(Math.random()*n);
+const okAdd=[(a,b)=>a>=1&&b>=1&&a+b<=20,(a,b)=>a>=10&&b>=1&&a+b<=99&&a%10+b%10<10,(a,b)=>a>=10&&b>=2&&a+b<=100&&a%10+b%10>=10,(a,b)=>a+b<=100&&a+b>0];
+const okSub=[(a,b)=>a<=20&&b>=1&&a>b,(a,b)=>a>=10&&b>=1&&a>b&&a%10>=b%10,(a,b)=>a>=10&&b>=2&&a>b&&a%10<b%10,(a,b)=>a>=b&&a>0];
+const praise=['Верно!','Точно!','Молодец!','Так держать!','Отлично!'];
+let queue,cur,buf,dots,firstTry,missed,locked,view='menu',msg='';
+let mode='calc',mset=[2],study=2,hide=false;
+const NUMS=[2,3,4,5,6,7,8,9,10];
+
+function gen(){
+  if(mode==='mult')return genMult();
+  const op=cfg.op==='mix'?(Math.random()<.5?'+':'−'):(cfg.op==='add'?'+':'−');
+  const L=cfg.level-1,max=L===0?20:100;let a,b,n=0;
+  do{a=rnd(max+1);b=rnd(max+1);n++}while(!(op==='+'?okAdd:okSub)[L](a,b)&&n<5000);
+  const fmt=cfg.fmt==='mix'?(Math.random()<.5?'col':'line'):cfg.fmt;
+  return {a,b,op,fmt,ans:op==='+'?a+b:a-b,tries:0,retry:false};
+}
+function hint(c){
+  if(c.op==='×')return multHint(c);
+  const {a,b,op}=c,ao=a%10,bo=b%10,at=(a-ao)/10,bt=(b-bo)/10;
+  if(c.fmt==='col'){
+    if(op==='+'){const s=ao+bo,cr=s>=10?1:0;
+      return `Начни с единиц: ${ao} + ${bo} = ${s}`+(cr?`. Пишем ${s%10}, а 1 десяток запоминаем.`:`. Пишем ${s}.`)+` Потом десятки: ${at} + ${bt}${cr?' + 1':''} = ${at+bt+cr}.`;}
+    const br=ao<bo?1:0;
+    return `Начни с единиц: `+(br?`из ${ao} нельзя вычесть ${bo}, поэтому занимаем десяток: ${ao+10} − ${bo} = ${ao+10-bo}. У десятков остаётся ${at-1}.`:`${ao} − ${bo} = ${ao-bo}.`)+` Потом десятки: ${at-br} − ${bt} = ${at-br-bt}.`;
+  }
+  if(op==='+'){
+    if(bt>0&&bo>0)return `${a} + ${bt} = ${a+bt}, потом ${a+bt} + ${bo} = ${a+b}.`;
+    if(bo===0)return `Прибавляем десятки: к ${a} добавляем ${bt/10} дес. Получается ${a+b}.`;
+    if(ao+b>10)return `Сначала дойди до круглого: ${a} + ${10-ao} = ${a+10-ao}. Осталось прибавить ${b-(10-ao)}.`;
+    return `Считай единицы: ${ao} + ${b} = ${ao+b}, значит ${a+b}.`;
+  }
+  if(bt>0&&bo>0)return `${a} − ${bt} = ${a-bt}, потом ${a-bt} − ${bo} = ${a-b}.`;
+  if(bo===0)return `Убираем десятки: ${a} − ${bt} = ${a-b}.`;
+  if(ao>=b)return `Считай единицы: ${ao} − ${b} = ${ao-b}, значит ${a-b}.`;
+  return `Сначала дойди до круглого: ${a} − ${ao} = ${a-ao}. Ещё убрать ${b-ao}: ${a-ao} − ${b-ao} = ${a-b}.`;
+}
+const tips={2:'Умножить на 2 — значит удвоить: 2 × 6 — это 6 + 6.',3:'Считай тройками: 3, 6, 9, 12, 15…',4:'Удвой и удвой ещё раз: 4 × 6 — это 6, потом 12, потом 24.',5:'Ответ всегда заканчивается на 5 или на 0.',6:'6 × 7 — это 5 × 7 и ещё один раз 7: 35 + 7 = 42.',7:'Самое трудное: 7 × 8 = 56. Запомни цифры по порядку: 5, 6, 7, 8.',8:'Удваивай три раза: 8 × 4 — это 4, 8, 16, 32.',9:'Цифры ответа в сумме дают 9: 9 × 4 = 36, и 3 + 6 = 9.',10:'Просто припиши ноль справа: 10 × 7 = 70.'};
+function tabs(){return `<div class="tabs"><button data-m="calc" aria-pressed="${mode==='calc'}">Счёт до 100</button><button data-m="mult" aria-pressed="${mode==='mult'}">Таблица умножения</button></div>`}
+function multMenu(){
+  $('#app').innerHTML=tabs()+`<h1>Таблица умножения</h1>
+  <p class="sub">Сначала выучи число, потом потренируйся на примерах.</p>
+  <div class="grp"><h2>Какие числа тренируем</h2><div class="chips">${NUMS.map(n=>`<button class="chip num" data-n="${n}" aria-pressed="${mset.includes(n)}">${n}</button>`).join('')}</div>
+  <div style="margin-top:10px"><button class="ghost" data-a="all">Выбрать все</button></div></div>
+  <div class="row"><button class="go alt" data-a="study">Учить</button><button class="go" data-a="start">Тренировка</button></div>`;
+}
+function studyView(){
+  view='study';const n=study;
+  $('#app').innerHTML=`<div class="top"><button class="ghost" data-a="menu">← Меню</button><button class="ghost" data-a="hide">${hide?'Показать ответы':'Прикрыть ответы'}</button></div>
+  <div class="chips" style="margin:12px 0">${NUMS.map(k=>`<button class="chip num" data-s="${k}" aria-pressed="${k===n}">${k}</button>`).join('')}</div>
+  <section class="sheet tbl">${Array.from({length:10},(_,i)=>i+1).map(i=>`<button class="trow" data-r="${i}"><span>${n} × ${i} =</span><b class="${hide?'hid':''}">${n*i}</b></button>`).join('')}</section>
+  <p class="study-tip">${tips[n]}</p>
+  <p class="tip" style="margin-bottom:10px">Нажми на строку, чтобы спрятать или показать ответ.</p>
+  <button class="go" data-a="start1">Тренировать число ${n}</button>`;
+}
+function genMult(){
+  const n=mset[rnd(mset.length)],m=1+rnd(10),sw=Math.random()<.5,a=sw?m:n,b=sw?n:m;
+  return {a,b,op:'×',fmt:'line',ans:a*b,tries:0,retry:false};
+}
+function multHint(c){
+  const s=Math.max(c.a,c.b),k=Math.min(c.a,c.b);
+  const seq=Array.from({length:k},(_,i)=>s*(i+1)).join(', ');
+  return `Считай прыжками по ${s}: ${seq}. Прыжков: ${k}.`;
+}
+function menu(){
+  view='menu';
+  if(mode==='mult')return multMenu();
+  const chip=(g,v,t,s)=>`<button class="chip" data-g="${g}" data-v="${v}" aria-pressed="${cfg[g]==v}">${t}${s?`<small>${s}</small>`:''}</button>`;
+  $('#app').innerHTML=tabs()+`<h1>Считаем до 100</h1>
+  <p class="sub">Тетрадка для тренировки: сложение и вычитание, в строчку и в столбик.</p>
+  <div class="total">⭐ ${save.stars}</div>
+  <div class="grp"><h2>Уровень</h2><div class="chips">
+  ${chip('level',1,'До 20','7 + 8')}${chip('level',2,'До 100, без перехода','34 + 25')}${chip('level',3,'До 100, с переходом','38 + 27')}${chip('level',4,'Всё вместе','от 0 до 100')}</div></div>
+  <div class="grp"><h2>Что считаем</h2><div class="chips">${chip('op','add','Сложение')}${chip('op','sub','Вычитание')}${chip('op','mix','И то и другое')}</div></div>
+  <div class="grp"><h2>Как считаем</h2><div class="chips">${chip('fmt','line','В строчку')}${chip('fmt','col','В столбик')}${chip('fmt','mix','Вперемешку')}</div></div>
+  <button class="go" data-a="start">Начать раунд</button>`;
+}
+function newRound(){
+  queue=[];const seen=new Set();
+  for(let i=0;i<10;i++){let q,t=0;do{q=gen();t++}while(seen.has(q.a+q.op+q.b)&&t<30);seen.add(q.a+q.op+q.b);queue.push(q)}
+  dots=[];firstTry=0;missed=[];game();next();
+}
+function game(){
+  view='game';
+  $('#app').innerHTML=`<div class="top"><button class="ghost" data-a="menu">← Меню</button><div class="dots" id="dots"></div></div>
+  <section class="sheet" id="sheet"></section><div class="msg" id="msg" aria-live="polite"></div>
+  <div class="pad">${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-k="${n}">${n}</button>`).join('')}<button data-k="b" aria-label="Стереть">⌫</button><button data-k="0">0</button><button class="enter" data-k="e" aria-label="Проверить">✓</button></div>`;
+}
+function next(){
+  if(!queue.length)return finish();
+  cur=queue.shift();cur.tries=0;buf='';locked=false;msg='';draw();
+}
+function cols(c){return Math.max(2,String(c.a).length,String(c.b).length,String(c.ans).length)}
+function draw(){
+  $('#dots').innerHTML=Array.from({length:10},(_,i)=>`<span class="d ${dots[i]||''}"></span>`).join('');
+  const c=cur;let h;
+  if(c.fmt==='line'){
+    h=`<div class="line"><span>${c.a}</span><span>${c.op}</span><span>${c.b}</span><span>=</span><span class="ans act">${buf||'&nbsp;'}</span></div>`;
+  }else{
+    const n=cols(c),pad=x=>String(x).padStart(n,' ').split('');
+    const row=(sign,arr)=>`<div class="cell sign">${sign}</div>`+arr.map(ch=>`<div class="cell">${ch.trim()}</div>`).join('');
+    let boxes='';
+    for(let k=n-1;k>=0;k--)boxes+=`<div class="cell in${k===buf.length?' act':''}">${buf[k]||''}</div>`;
+    h=`<div class="col" style="grid-template-columns:40px repeat(${n},62px)">${row('',pad(c.a))}${row(c.op,pad(c.b))}<div class="cell rule"></div><div class="cell sign"></div>${boxes}</div>
+    <p class="tip">Пиши справа налево: сначала единицы, потом десятки.</p>`;
+  }
+  $('#sheet').innerHTML=h;
+  $('#msg').className='msg'+(msg.cls?' '+msg.cls:'');
+  $('#msg').innerHTML=msg.html||'';
+}
+function key(k){
+  if(view!=='game'||locked)return;
+  const max=cur.fmt==='line'?3:cols(cur);
+  if(k==='b')buf=buf.slice(0,-1);
+  else if(k==='e')return check();
+  else if(buf.length<max)buf+=k;
+  draw();
+}
+function check(){
+  if(!buf)return;
+  const val=cur.fmt==='line'?parseInt(buf,10):[...buf].reduce((s,ch,i)=>s+ch*10**i,0);
+  if(val===cur.ans){
+    locked=true;
+    if(!cur.retry){dots.push(cur.tries===0?'ok':'fix');if(cur.tries===0)firstTry++;else missed.push(cur)}
+    msg={cls:'ok',html:`<b>${praise[rnd(praise.length)]}</b> ${cur.a} ${cur.op} ${cur.b} = ${cur.ans}`};
+    draw();setTimeout(next,cur.tries===0?800:1400);return;
+  }
+  cur.tries++;
+  if(cur.tries===1){
+    buf='';msg={cls:'bad',html:`<b>Почти!</b> Подумай ещё раз. ${hint(cur)}`};draw();return;
+  }
+  locked=true;
+  if(!cur.retry){dots.push('bad');missed.push(cur);queue.push({...cur,tries:0,retry:true})}
+  msg={cls:'bad',html:`<b>Правильный ответ: ${cur.ans}</b><br>${hint(cur)}<br><button class="next" data-a="next">Понятно, дальше</button>`};
+  draw();
+}
+function finish(){
+  view='result';
+  const s=firstTry>=9?3:firstTry>=7?2:firstTry>=4?1:0;
+  save.stars+=s;const bk=mode==='mult'?'m':cfg.level;save.best[bk]=Math.max(save.best[bk]||0,s);persist();
+  const text=['Давай ещё раунд — получится лучше!','Хорошее начало!','Здорово, почти без ошибок!','Идеально! Ты мастер счёта!'][s];
+  const miss=missed.length?`<div class="miss"><b>Ещё потренируем:</b>${missed.map(q=>`<div>${q.a} ${q.op} ${q.b} = ${q.ans}</div>`).join('')}</div>`:'';
+  $('#app').innerHTML=`<div class="res"><h1>Раунд закончен</h1><div class="stars" aria-label="${s} из 3 звёзд">${'★'.repeat(s)+'☆'.repeat(3-s)}</div>
+  <p class="sub">С первого раза верно: ${firstTry} из 10. ${text}</p>${miss}
+  <div class="row"><button class="go alt" data-a="menu">В меню</button><button class="go" data-a="start">Ещё раунд</button></div></div>`;
+}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button');if(!t)return;
+  if(t.dataset.m){mode=t.dataset.m;menu();return}
+  if(t.dataset.n){const n=+t.dataset.n;mset=mset.includes(n)?(mset.length>1?mset.filter(x=>x!==n):mset):[...mset,n];menu();return}
+  if(t.dataset.s){study=+t.dataset.s;studyView();return}
+  if(t.dataset.r){t.querySelector('b').classList.toggle('hid');return}
+  if(t.dataset.g){cfg[t.dataset.g]=isNaN(t.dataset.v)?t.dataset.v:+t.dataset.v;menu();return}
+  if(t.dataset.k)return key(t.dataset.k);
+  const a=t.dataset.a;
+  if(a==='start')newRound();else if(a==='menu')menu();else if(a==='next')next();
+  else if(a==='study')studyView();
+  else if(a==='hide'){hide=!hide;studyView()}
+  else if(a==='all'){mset=[...NUMS];menu()}
+  else if(a==='start1'){mset=[study];newRound()}
+});
+document.addEventListener('keydown',e=>{
+  if(view!=='game')return;
+  if(/^[0-9]$/.test(e.key))key(e.key);
+  else if(e.key==='Backspace')key('b');
+  else if(e.key==='Enter'){if(locked&&cur.tries>=2)next();else key('e')}
+});
+menu();
+</script>
+</body>
+</html>

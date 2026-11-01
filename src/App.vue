@@ -12,6 +12,7 @@
           <RouterLink to="/workouts" class="link">Workouts</RouterLink>
           <RouterLink to="/cleanup" class="link">Cleanup</RouterLink>
           <RouterLink to="/russian" class="link">Russian</RouterLink>
+          <RouterLink to="/kids-math" class="link">Kids Math</RouterLink>
         </div>
       </nav>
     </header>
