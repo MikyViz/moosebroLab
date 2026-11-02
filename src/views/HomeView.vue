@@ -35,6 +35,10 @@
         <h2>Russian</h2>
         <p>Алфавит, карточки и игра для детей</p>
       </RouterLink>
+      <RouterLink to="/kids-math" class="card">
+        <h2>Kids Math</h2>
+        <p>Математика для детей</p>
+      </RouterLink>
     </nav>
   </main>
 </template>
