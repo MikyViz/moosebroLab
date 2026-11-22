@@ -331,6 +331,8 @@ resetQuiz();
 
     <!-- РАДИКАЛЫ — обновлено: kun синим, on зелёным, два блока мнемоники -->
     <section v-show="activeTab === 'radicals'" class="panel">
+      <p><span class="reading-kun">синим</span> — kun, <span class="reading-on">зелёным</span> — on</p>
+      <p><span class="reading-kun">kun</span> — японское чтение, используется в речи, <br> <span class="reading-on">on</span> — китайское чтение используется для чтения внутри слов</p>
       <div class="filter-container study-tabs">
         <button
           class="filter-btn study-tab"
