@@ -1,11 +1,18 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { grammarData } from "../data/grammarData";
-import { hiragana, radicals } from "../data/japaneseData";
+import {
+  hiragana,
+  radicals,
+  particles,
+  voicing,
+  voicingSummary,
+} from "../data/japaneseData";
 
 type TabKey = "hiragana" | "radicals" | "grammar" | "quiz";
 type DayFilter = "all" | "day1" | "day2" | "day3" | "day4" | "day5";
 type GrammarDay = "day2" | "day3" | "day4" | "day5";
+type GrammarView = "days" | "particles" | "voicing";
 
 type QuizItem = {
   ch: string;
@@ -26,6 +33,7 @@ const activeTab = ref<TabKey>("hiragana");
 const hiraganaFilter = ref<DayFilter>("all");
 const radicalsFilter = ref<DayFilter>("all");
 const grammarDay = ref<GrammarDay>("day2");
+const grammarView = ref<GrammarView>("days");
 
 const openHiragana = ref<Set<string>>(new Set());
 const openRadicals = ref<Set<string>>(new Set());
@@ -52,6 +60,13 @@ const filteredRadicals = computed(() => {
 });
 
 const grammarItems = computed(() => grammarData[grammarDay.value]);
+
+const dakutenPairs = computed(() =>
+  voicing.filter((item) => item.mark === "dakuten")
+);
+const handakutenPairs = computed(() =>
+  voicing.filter((item) => item.mark === "handakuten")
+);
 
 const currentQuizItem = computed(
   () => quizItems.value[quizIndex.value] ?? null
@@ -233,7 +248,7 @@ const setQuizFilter = (filter: DayFilter) => {
 
 resetQuiz();
 </script>
- 
+
 <template>
   <main class="jp-page study-wrap">
     <div class="tabs-container study-tabs">
@@ -398,60 +413,116 @@ resetQuiz();
       </div>
     </section>
 
-    <!-- ГРАММАТИКА — без изменений -->
+    <!-- ГРАММАТИКА — три режима: по дням / частицы / чёрточки и кружок -->
     <section v-show="activeTab === 'grammar'" class="panel">
       <div class="filter-container study-tabs">
         <button
           class="filter-btn study-tab"
-          :class="{ active: grammarDay === 'day2' }"
-          @click="grammarDay = 'day2'"
+          :class="{ active: grammarView === 'days' }"
+          @click="grammarView = 'days'"
         >
-          День 2
+          По дням
         </button>
         <button
           class="filter-btn study-tab"
-          :class="{ active: grammarDay === 'day3' }"
-          @click="grammarDay = 'day3'"
+          :class="{ active: grammarView === 'particles' }"
+          @click="grammarView = 'particles'"
         >
-          День 3
+          Частицы
         </button>
         <button
           class="filter-btn study-tab"
-          :class="{ active: grammarDay === 'day4' }"
-          @click="grammarDay = 'day4'"
+          :class="{ active: grammarView === 'voicing' }"
+          @click="grammarView = 'voicing'"
         >
-          День 4
-        </button>
-        <button
-          class="filter-btn study-tab"
-          :class="{ active: grammarDay === 'day5' }"
-          @click="grammarDay = 'day5'"
-        >
-          День 5
+          Чёрточки и кружок
         </button>
       </div>
-      <div id="grammar-content">
+
+      <!-- По дням — как было -->
+      <template v-if="grammarView === 'days'">
+        <div class="filter-container study-tabs">
+          <button
+            class="filter-btn study-tab"
+            :class="{ active: grammarDay === 'day2' }"
+            @click="grammarDay = 'day2'"
+          >
+            День 2
+          </button>
+          <button
+            class="filter-btn study-tab"
+            :class="{ active: grammarDay === 'day3' }"
+            @click="grammarDay = 'day3'"
+          >
+            День 3
+          </button>
+          <button
+            class="filter-btn study-tab"
+            :class="{ active: grammarDay === 'day4' }"
+            @click="grammarDay = 'day4'"
+          >
+            День 4
+          </button>
+          <button
+            class="filter-btn study-tab"
+            :class="{ active: grammarDay === 'day5' }"
+            @click="grammarDay = 'day5'"
+          >
+            День 5
+          </button>
+        </div>
+        <div id="grammar-content">
+          <article
+            v-for="item in grammarItems"
+            :key="item.topic"
+            class="grammar-card"
+          >
+            <div class="grammar-label">{{ item.topic }}</div>
+            <div v-if="item.reading" class="grammar-char">
+              {{ item.reading }}
+            </div>
+            <div class="grammar-description">{{ item.explanation }}</div>
+            <div v-if="item.structure" class="grammar-structure-box">
+              <div class="grammar-small-label">Структура</div>
+              <div
+                class="grammar-formula"
+                v-html="highlightParticles(item.structure)"
+              ></div>
+            </div>
+            <div v-if="item.example" class="grammar-example-box">
+              <div class="grammar-small-label">Пример</div>
+              <div
+                class="grammar-example"
+                v-html="highlightParticles(item.example.jp)"
+              ></div>
+              <div class="grammar-translation">
+                {{ item.example.romaji }} — "{{ item.example.ru }}"
+              </div>
+            </div>
+            <div v-if="item.notes" class="grammar-notes">
+              <div class="grammar-small-label">Примечание</div>
+              <div class="grammar-notes-text">{{ item.notes }}</div>
+            </div>
+          </article>
+        </div>
+      </template>
+
+      <!-- Сводка: частицы -->
+      <div v-else-if="grammarView === 'particles'" id="grammar-content">
         <article
-          v-for="item in grammarItems"
-          :key="item.topic"
+          v-for="item in particles"
+          :key="item.ch"
           class="grammar-card"
         >
-          <div class="grammar-label">{{ item.topic }}</div>
-          <div v-if="item.reading" class="grammar-char">{{ item.reading }}</div>
-          <div class="grammar-description">{{ item.explanation }}</div>
-          <div v-if="item.structure" class="grammar-structure-box">
-            <div class="grammar-small-label">Структура</div>
-            <div
-              class="grammar-formula"
-              v-html="highlightParticles(item.structure)"
-            ></div>
+          <div class="grammar-label">{{ item.name }}</div>
+          <div class="grammar-char">{{ item.ch }}</div>
+          <div class="grammar-small-label">
+            Читается как частица: {{ item.reading }}
           </div>
-          <div v-if="item.example" class="grammar-example-box">
-            <div class="grammar-small-label">Пример</div>
-            <div
-              class="grammar-example"
-              v-html="highlightParticles(item.example.jp)"
-            ></div>
+          <div class="grammar-description">{{ item.explanation }}</div>
+          <div class="grammar-example-box" @click="speak(item.example.jp)">
+            <div class="grammar-small-label">Пример (клик — озвучка)</div>
+            <div class="grammar-example">{{ item.example.jp }}</div>
             <div class="grammar-translation">
               {{ item.example.romaji }} — "{{ item.example.ru }}"
             </div>
@@ -459,6 +530,64 @@ resetQuiz();
           <div v-if="item.notes" class="grammar-notes">
             <div class="grammar-small-label">Примечание</div>
             <div class="grammar-notes-text">{{ item.notes }}</div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Сводка: дакутэн и хандакутэн -->
+      <div v-else id="grammar-content">
+        <article class="grammar-card">
+          <div class="grammar-label">{{ voicingSummary.title }}</div>
+          <div class="grammar-description">
+            {{ voicingSummary.explanation }}
+          </div>
+          <div class="grammar-structure-box">
+            <div class="grammar-small-label">Правила</div>
+            <ul>
+              <li v-for="rule in voicingSummary.rules" :key="rule">
+                {{ rule }}
+              </li>
+            </ul>
+          </div>
+          <div class="grammar-notes">
+            <div class="grammar-small-label">Подсказка</div>
+            <div class="grammar-notes-text">{{ voicingSummary.tip }}</div>
+          </div>
+        </article>
+
+        <article class="grammar-card">
+          <div class="grammar-label">Дакутэн ゛ — звонкие (клик — озвучка)</div>
+          <div class="card-grid">
+            <div
+              v-for="item in dakutenPairs"
+              :key="`dakuten-${item.base}`"
+              class="card study-card"
+              @click="speak(item.voiced)"
+            >
+              <div class="card-char">{{ item.base }} → {{ item.voiced }}</div>
+              <div class="card-reading">
+                {{ item.baseR }} → {{ item.voicedR }}
+              </div>
+              <div v-if="item.note" class="card-mnemonic">{{ item.note }}</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="grammar-card">
+          <div class="grammar-label">Хандакутэн ゜ — только は-ряд, звук p</div>
+          <div class="card-grid">
+            <div
+              v-for="item in handakutenPairs"
+              :key="`handakuten-${item.base}`"
+              class="card study-card"
+              @click="speak(item.voiced)"
+            >
+              <div class="card-char">{{ item.base }} → {{ item.voiced }}</div>
+              <div class="card-reading">
+                {{ item.baseR }} → {{ item.voicedR }}
+              </div>
+              <div v-if="item.note" class="card-mnemonic">{{ item.note }}</div>
+            </div>
           </div>
         </article>
       </div>
