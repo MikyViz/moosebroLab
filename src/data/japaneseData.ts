@@ -15,6 +15,24 @@ export type RadicalItem = {
   day: 1 | 2 | 3 | 4 | 5
 }
 
+export type ParticleItem = {
+  ch: string
+  reading: string   // как читается именно в роли частицы
+  name: string
+  explanation: string
+  example: { jp: string; romaji: string; ru: string }
+  notes: string | null
+}
+
+export type VoicingItem = {
+  base: string      // исходный знак
+  baseR: string
+  voiced: string    // знак с чёрточками
+  voicedR: string
+  mark: 'dakuten' | 'handakuten'
+  note: string | null
+}
+
 export const hiragana: HiraganaItem[] = [
   { ch: 'あ', r: 'a', mnemonic: 'Круглая закорючка - как прописная а, а пересекающиеся полоски - похожи на поломанную букву "a"', day: 1 },
   { ch: 'い', r: 'i', mnemonic: 'Две буквы i', day: 1 },
@@ -90,4 +108,104 @@ export const radicals: RadicalItem[] = [
   { ch: '門', kun: 'kado',    on: 'mon',           kana: 'かど',     meaning: 'ворота',          mnemonic: 'Две створки ворот — стражник стоит у МОНумента-ворот', day: 5 },
   { ch: '雨', kun: 'ame',     on: 'u',             kana: 'あめ',     meaning: 'дождь',           mnemonic: 'Облако с капельками-точками под ним — дождь барабанит: "ame-ame"', day: 5 },
   { ch: '竹', kun: 'take',    on: 'chiku',         kana: 'たけ',     meaning: 'бамбук',          mnemonic: 'Два стебля бамбука с листьями — стучат друг о друга: "та-кэ"', day: 5 },
+]
+
+// ───────────── Сводка: частицы ─────────────
+// Частицы — отдельные слова-«клей», которые ставятся ПОСЛЕ слова или группы слов.
+// Три из них читаются не так, как пишутся: は → wa, へ → e, を → o.
+export const particles: ParticleItem[] = [
+  {
+    ch: 'は', reading: 'wa', name: 'Тема',
+    explanation: 'Показывает, о чём речь: "что касается...". Это не артикль, а маркер темы всего предложения. Часто несёт оттенок контраста.',
+    example: { jp: 'わたしは がくせいです', romaji: 'watashi wa gakusei desu', ru: 'Я — студент' },
+    notes: 'Как слог внутри слова は читается ha (はは — haha, "мама"), как частица — всегда wa.',
+  },
+  {
+    ch: 'が', reading: 'ga', name: 'Субъект',
+    explanation: 'Называет подлежащее, того, кто выполняет действие или обладает состоянием. Без выделения темы и без контраста.',
+    example: { jp: 'ねこが ねています', romaji: 'neko ga nete imasu', ru: 'Кошка спит' },
+    notes: 'は vs が: は = "что касается X...", が = "именно X" / нейтральное называние субъекта. Все нюансы сразу учить не нужно.',
+  },
+  {
+    ch: 'を', reading: 'o', name: 'Прямой объект',
+    explanation: 'Показывает, на что направлено действие: то, что едят, видят, читают.',
+    example: { jp: 'ごはんを たべます', romaji: 'gohan o tabemasu', ru: 'Ем (рис / еду)' },
+    notes: 'Читается o (как お), но пишется только в роли этой частицы.',
+  },
+  {
+    ch: 'に', reading: 'ni', name: 'Место существования / направление',
+    explanation: 'Где что-то находится (いる, ある) или куда направлено движение.',
+    example: { jp: 'やまに いく', romaji: 'yama ni iku', ru: 'Иду на гору' },
+    notes: 'いえに いる — "находиться дома". Для места, где происходит действие, используется で.',
+  },
+  {
+    ch: 'で', reading: 'de', name: 'Место действия',
+    explanation: 'Где совершается действие.',
+    example: { jp: 'いえで たべる', romaji: 'ie de taberu', ru: 'Ем дома' },
+    notes: 'に = где находится / куда идёшь. で = где происходит действие.',
+  },
+  {
+    ch: 'も', reading: 'mo', name: '"Тоже"',
+    explanation: 'Добавляет "тоже / также". Занимает место は, が или を.',
+    example: { jp: 'わたしも がくせいです', romaji: 'watashi mo gakusei desu', ru: 'Я тоже студент' },
+    notes: null,
+  },
+  {
+    ch: 'の', reading: 'no', name: 'Принадлежность',
+    explanation: 'Связывает два существительных: X の Y = "Y, принадлежащий X". Похоже на "\'s" в английском.',
+    example: { jp: 'わたしの ほん', romaji: 'watashi no hon', ru: 'Моя книга' },
+    notes: null,
+  },
+  {
+    ch: 'へ', reading: 'e', name: 'Направление',
+    explanation: 'Показывает направление движения, близко к に в этом значении.',
+    example: { jp: 'やまへ いく', romaji: 'yama e iku', ru: 'Иду к горе' },
+    notes: 'Пишется he, но как частица читается e.',
+  },
+]
+
+// ───────────── Сводка: нигори и хандакутэн ─────────────
+// Дакутэн ゛ (тэнтэн, две чёрточки) делает согласный ЗВОНКИМ (голос включается).
+// Хандакутэн ゜ (кружок) есть только у ха-ряда и даёт звук p.
+// Это не "жёстче", а звонче: k → g, s → z, t → d, h → b.
+export const voicingSummary = {
+  title: 'Чёрточки и кружок: звонкие и "p"-звуки',
+  explanation:
+    'Две чёрточки ゛ (дакутэн, тэнтэн) делают согласный звонким: при произнесении работают голосовые связки. Кружок ゜ (хандакутэн) бывает только у ха-ряда и превращает h в p. Гласная не меняется.',
+  rules: [
+    'か-ряд → が-ряд: k → g',
+    'さ-ряд → ざ-ряд: s → z (し → じ ji)',
+    'た-ряд → だ-ряд: t → d (ち → ぢ ji, つ → づ zu, редкие)',
+    'は-ряд → ば-ряд: h → b',
+    'は-ряд + кружок → ぱ-ряд: h → p',
+  ],
+  tip: 'Проверка пальцем на горле: произнеси "к", потом "г" — на "г" чувствуется вибрация. Это и есть разница между глухим и звонким.',
+}
+
+export const voicing: VoicingItem[] = [
+  { base: 'か', baseR: 'ka', voiced: 'が', voicedR: 'ga', mark: 'dakuten', note: null },
+  { base: 'き', baseR: 'ki', voiced: 'ぎ', voicedR: 'gi', mark: 'dakuten', note: null },
+  { base: 'く', baseR: 'ku', voiced: 'ぐ', voicedR: 'gu', mark: 'dakuten', note: null },
+  { base: 'け', baseR: 'ke', voiced: 'げ', voicedR: 'ge', mark: 'dakuten', note: null },
+  { base: 'こ', baseR: 'ko', voiced: 'ご', voicedR: 'go', mark: 'dakuten', note: null },
+  { base: 'さ', baseR: 'sa', voiced: 'ざ', voicedR: 'za', mark: 'dakuten', note: null },
+  { base: 'し', baseR: 'shi', voiced: 'じ', voicedR: 'ji', mark: 'dakuten', note: null },
+  { base: 'す', baseR: 'su', voiced: 'ず', voicedR: 'zu', mark: 'dakuten', note: null },
+  { base: 'せ', baseR: 'se', voiced: 'ぜ', voicedR: 'ze', mark: 'dakuten', note: null },
+  { base: 'そ', baseR: 'so', voiced: 'ぞ', voicedR: 'zo', mark: 'dakuten', note: null },
+  { base: 'た', baseR: 'ta', voiced: 'だ', voicedR: 'da', mark: 'dakuten', note: null },
+  { base: 'ち', baseR: 'chi', voiced: 'ぢ', voicedR: 'ji', mark: 'dakuten', note: 'Звучит так же, как じ, и встречается редко' },
+  { base: 'つ', baseR: 'tsu', voiced: 'づ', voicedR: 'zu', mark: 'dakuten', note: 'Звучит так же, как ず, и встречается редко' },
+  { base: 'て', baseR: 'te', voiced: 'で', voicedR: 'de', mark: 'dakuten', note: null },
+  { base: 'と', baseR: 'to', voiced: 'ど', voicedR: 'do', mark: 'dakuten', note: null },
+  { base: 'は', baseR: 'ha', voiced: 'ば', voicedR: 'ba', mark: 'dakuten', note: null },
+  { base: 'ひ', baseR: 'hi', voiced: 'び', voicedR: 'bi', mark: 'dakuten', note: null },
+  { base: 'ふ', baseR: 'fu', voiced: 'ぶ', voicedR: 'bu', mark: 'dakuten', note: null },
+  { base: 'へ', baseR: 'he', voiced: 'べ', voicedR: 'be', mark: 'dakuten', note: null },
+  { base: 'ほ', baseR: 'ho', voiced: 'ぼ', voicedR: 'bo', mark: 'dakuten', note: null },
+  { base: 'は', baseR: 'ha', voiced: 'ぱ', voicedR: 'pa', mark: 'handakuten', note: null },
+  { base: 'ひ', baseR: 'hi', voiced: 'ぴ', voicedR: 'pi', mark: 'handakuten', note: null },
+  { base: 'ふ', baseR: 'fu', voiced: 'ぷ', voicedR: 'pu', mark: 'handakuten', note: null },
+  { base: 'へ', baseR: 'he', voiced: 'ぺ', voicedR: 'pe', mark: 'handakuten', note: null },
+  { base: 'ほ', baseR: 'ho', voiced: 'ぽ', voicedR: 'po', mark: 'handakuten', note: null },
 ]
