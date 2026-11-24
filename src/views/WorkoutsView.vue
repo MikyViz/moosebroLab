@@ -10,15 +10,26 @@ type BodyView = 'front' | 'back'
 
 type WorkoutMode = 'full' | 'min'
 
-const weekdayIds = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const // ?as const?
-const workoutProgressStorageKey = 'moosebroLab.workouts.progress' //?
+// `as const` делает массив неизменяемым кортежем с точными литеральными типами
+// ('sun' | 'mon' | ...), а не просто string[]. Тогда TypeScript знает,
+// какие именно значения может вернуть weekdayIds[...].
+// Порядок важен: Date.getDay() возвращает 0 для воскресенья, 1 для понедельника и т.д.
+const weekdayIds = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const
+
+// Ключ, под которым прогресс лежит в localStorage (просто имя "ячейки" в хранилище браузера).
+const workoutProgressStorageKey = 'moosebroLab.workouts.progress'
 
 const getCurrentWeekdayId = () => weekdayIds[new Date().getDay()]
 
 const getTodayKey = () => {
   const now = new Date()
   const year = now.getFullYear()
-  const month = String(now.getMonth() + 1).padStart(2, '0') // ? padStart? почему тут стринг а выше  нет?
+  // getMonth() считает с нуля (январь = 0), поэтому +1.
+  // padStart(2, '0') - метод строк, он добивает строку нулями слева до длины 2: '5' -> '05'.
+  // Поэтому month и day сначала превращаются в строки через String().
+  // Год не оборачиваем: в нем всегда 4 цифры, дополнять нечего, а в шаблонной строке
+  // число само превращается в текст.
+  const month = String(now.getMonth() + 1).padStart(2, '0')
   const day = String(now.getDate()).padStart(2, '0')
   return `${year}-${month}-${day}`
 }
@@ -86,6 +97,20 @@ const activeExercises = computed(() => {
     return day.min
   }
   return day.ex ?? []
+})
+
+// Заметка активного (не отдыхового) дня, например про верёвку и резинку в среду.
+// В режиме "Минимум" она не нужна, если у дня есть своя короткая версия:
+// там упражнения без верёвки и резинки.
+const activeDayNote = computed(() => {
+  const day = activeDay.value
+  if (!day || day.rest || !day.note) {
+    return ''
+  }
+  if (workoutMode.value === 'min' && day.min?.length) {
+    return ''
+  }
+  return day.note
 })
 
 const setPattern = (patternId: string) => {
@@ -240,6 +265,11 @@ onBeforeUnmount(() => {
             <div class="exsets">{{ exercise.s }}</div>
           </div>
         </div>
+
+        <article v-if="activeDayNote" class="callout study-card">
+          <h4>Перед тренировкой</h4>
+          <p>{{ activeDayNote }}</p>
+        </article>
       </div>
 
       <article class="callout callout-bonus study-card">
